@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Team } from '@/data/teams';
+import Image from 'next/image';
+import type { Team } from '@/lib/types';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Trophy } from 'lucide-react';
 
@@ -18,8 +19,14 @@ export function TeamCard({ team }: TeamCardProps) {
           }}
         >
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-6xl opacity-90 transition-transform group-hover:scale-110 duration-300">
-              {team.logo}
+            <div className="opacity-90 transition-transform group-hover:scale-110 duration-300">
+              <Image
+                src={team.logo}
+                alt={`${team.name} logo`}
+                width={96}
+                height={96}
+                className="object-contain"
+              />
             </div>
           </div>
         </CardHeader>

@@ -1,53 +1,62 @@
-'use client';
-
-import { useState, useMemo } from 'react';
-import { teams, players } from '@/data/teams';
-import { matches } from '@/data/matches';
-import { Input } from '@/components/ui/input';
+import { Metadata } from 'next';
+import { fetchTeams, fetchPlayers, fetchMatches } from '@/lib/api/server';
+import { REVALIDATE_TIME } from '@/lib/config/api';
 import { TeamCard } from '@/components/cards/team-card';
 import { PlayerCard } from '@/components/cards/player-card';
 import { MatchCard } from '@/components/cards/match-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search } from 'lucide-react';
+import { SearchInput } from '@/components/search-input';
 
-export default function SearchPage() {
-  const [query, setQuery] = useState('');
+export const metadata: Metadata = {
+  title: 'Recherche - Basketball Africa League',
+  description: 'Recherchez des équipes, joueurs et matchs de la BAL.',
+};
 
-  const filteredTeams = useMemo(() => {
-    if (!query) return [];
-    const lowerQuery = query.toLowerCase();
-    return teams.filter(
-      (team) =>
-        team.name.toLowerCase().includes(lowerQuery) ||
-        team.city.toLowerCase().includes(lowerQuery) ||
-        team.country.toLowerCase().includes(lowerQuery)
-    );
-  }, [query]);
+// ISR - Revalidation toutes les heures
+export const revalidate = REVALIDATE_TIME.matches;
 
-  const filteredPlayers = useMemo(() => {
-    if (!query) return [];
-    const lowerQuery = query.toLowerCase();
-    return players.filter(
-      (player) =>
-        player.name.toLowerCase().includes(lowerQuery) ||
-        player.nationality.toLowerCase().includes(lowerQuery) ||
-        player.position.toLowerCase().includes(lowerQuery)
-    );
-  }, [query]);
+interface SearchPageProps {
+  searchParams: {
+    q?: string;
+  };
+}
 
-  const filteredMatches = useMemo(() => {
-    if (!query) return [];
-    const lowerQuery = query.toLowerCase();
-    return matches.filter((match) => {
-      const homeTeam = teams.find((t) => t.id === match.homeTeamId);
-      const awayTeam = teams.find((t) => t.id === match.awayTeamId);
-      return (
-        homeTeam?.name.toLowerCase().includes(lowerQuery) ||
-        awayTeam?.name.toLowerCase().includes(lowerQuery) ||
-        match.venue.toLowerCase().includes(lowerQuery)
-      );
-    });
-  }, [query]);
+export default async function SearchPage({ searchParams }: SearchPageProps) {
+  const query = searchParams.q?.toLowerCase() || '';
+
+  const [teams, players, matches] = await Promise.all([
+    fetchTeams(),
+    fetchPlayers(),
+    fetchMatches(),
+  ]);
+
+  // Filtrage côté serveur
+  const filteredTeams = query
+    ? teams.filter(
+        (team) =>
+          team.name.toLowerCase().includes(query) ||
+          team.city.toLowerCase().includes(query) ||
+          team.country.toLowerCase().includes(query)
+      )
+    : [];
+
+  const filteredPlayers = query
+    ? players.filter(
+        (player) =>
+          player.name.toLowerCase().includes(query) ||
+          player.nationality.toLowerCase().includes(query) ||
+          player.position.toLowerCase().includes(query)
+      )
+    : [];
+
+  const filteredMatches = query
+    ? matches.filter(
+        (match) =>
+          match.homeTeamName.toLowerCase().includes(query) ||
+          match.awayTeamName.toLowerCase().includes(query) ||
+          match.venue.toLowerCase().includes(query)
+      )
+    : [];
 
   const totalResults = filteredTeams.length + filteredPlayers.length + filteredMatches.length;
 
@@ -61,21 +70,12 @@ export default function SearchPage() {
           Recherche
         </h1>
         <p className="text-xl text-muted-foreground">
-          Recherchez des équipes, joueurs et matchs
+          Recherchez des équipes, joueurs et matchs de la BAL
         </p>
       </div>
 
       <div className="mx-auto mb-8 max-w-2xl">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Rechercher..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="pl-10 text-lg"
-          />
-        </div>
+        <SearchInput />
         {query && (
           <p className="mt-2 text-center text-sm text-muted-foreground">
             {totalResults} {totalResults === 1 ? 'résultat trouvé' : 'résultats trouvés'}
@@ -86,15 +86,9 @@ export default function SearchPage() {
       {query ? (
         <Tabs defaultValue="teams" className="w-full">
           <TabsList className="mb-8 grid w-full grid-cols-3 lg:w-[400px] lg:mx-auto">
-            <TabsTrigger value="teams">
-              Équipes ({filteredTeams.length})
-            </TabsTrigger>
-            <TabsTrigger value="players">
-              Joueurs ({filteredPlayers.length})
-            </TabsTrigger>
-            <TabsTrigger value="matches">
-              Matchs ({filteredMatches.length})
-            </TabsTrigger>
+            <TabsTrigger value="teams">Équipes ({filteredTeams.length})</TabsTrigger>
+            <TabsTrigger value="players">Joueurs ({filteredPlayers.length})</TabsTrigger>
+            <TabsTrigger value="matches">Matchs ({filteredMatches.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="teams">
@@ -141,9 +135,8 @@ export default function SearchPage() {
         </Tabs>
       ) : (
         <div className="py-12 text-center">
-          <Search className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
-          <p className="text-muted-foreground">
-            Commencez à taper pour rechercher des équipes, joueurs et matchs
+          <p className="text-lg text-muted-foreground">
+            Commencez à taper pour rechercher des équipes, joueurs ou matchs
           </p>
         </div>
       )}

@@ -1,7 +1,13 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { teams, players } from '@/data/teams';
-import { matches } from '@/data/matches';
+import {
+  fetchTeams,
+  fetchTeamById,
+  fetchPlayersByTeam,
+  fetchMatchesByTeam,
+} from '@/lib/api/server';
+import { REVALIDATE_TIME } from '@/lib/config/api';
+import Image from 'next/image';
 import { PlayerCard } from '@/components/cards/player-card';
 import { MatchCard } from '@/components/cards/match-card';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,8 +19,11 @@ interface TeamPageProps {
   };
 }
 
+// ISR - Revalidation toutes les 24 heures
+export const revalidate = REVALIDATE_TIME.teams;
+
 export async function generateMetadata({ params }: TeamPageProps): Promise<Metadata> {
-  const team = teams.find((t) => t.id === params.id);
+  const team = await fetchTeamById(params.id);
 
   if (!team) {
     return {
@@ -23,28 +32,31 @@ export async function generateMetadata({ params }: TeamPageProps): Promise<Metad
   }
 
   return {
-    title: `${team.name} - African Basketball League`,
+    title: `${team.name} - Basketball Africa League`,
     description: `Découvrez l'équipe ${team.name} de ${team.city}, ${team.country}. Effectif, statistiques et prochains matchs.`,
   };
 }
 
 export async function generateStaticParams() {
+  const teams = await fetchTeams();
   return teams.map((team) => ({
     id: team.id,
   }));
 }
 
-export default function TeamPage({ params }: TeamPageProps) {
-  const team = teams.find((t) => t.id === params.id);
+export default async function TeamPage({ params }: TeamPageProps) {
+  const [team, teamPlayers, teamMatches] = await Promise.all([
+    fetchTeamById(params.id),
+    fetchPlayersByTeam(params.id),
+    fetchMatchesByTeam(params.id),
+  ]);
 
   if (!team) {
     notFound();
   }
 
-  const teamPlayers = players.filter((p) => p.teamId === team.id);
-  const teamMatches = matches
-    .filter((m) => m.homeTeamId === team.id || m.awayTeamId === team.id)
-    .slice(0, 5);
+  // Limiter les matchs affichés
+  const recentMatches = teamMatches.slice(0, 5);
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -54,7 +66,15 @@ export default function TeamPage({ params }: TeamPageProps) {
           background: `linear-gradient(135deg, ${team.primaryColor} 0%, ${team.secondaryColor} 100%)`,
         }}
       >
-        <div className="mb-4 text-8xl">{team.logo}</div>
+        <div className="mb-4 flex items-center justify-center">
+          <Image
+            src={team.logo}
+            alt={`${team.name} logo`}
+            width={160}
+            height={160}
+            className="rounded-full object-contain"
+          />
+        </div>
         <h1 className="mb-2 text-5xl font-bold md:text-6xl">{team.name}</h1>
         <p className="mb-4 text-xl opacity-90">
           {team.city}, {team.country}

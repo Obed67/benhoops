@@ -1,5 +1,5 @@
-import { Match } from '@/data/matches';
-import { teams } from '@/data/teams';
+import type { Match } from '@/lib/types';
+import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
@@ -10,11 +10,6 @@ interface MatchCardProps {
 }
 
 export function MatchCard({ match }: MatchCardProps) {
-  const homeTeam = teams.find((t) => t.id === match.homeTeamId);
-  const awayTeam = teams.find((t) => t.id === match.awayTeamId);
-
-  if (!homeTeam || !awayTeam) return null;
-
   const matchDate = new Date(match.date);
 
   return (
@@ -26,16 +21,16 @@ export function MatchCard({ match }: MatchCardProps) {
               match.status === 'live'
                 ? 'default'
                 : match.status === 'finished'
-                  ? 'secondary'
-                  : 'outline'
+                ? 'secondary'
+                : 'outline'
             }
             className={match.status === 'live' ? 'animate-pulse' : ''}
           >
             {match.status === 'live'
               ? 'En direct'
               : match.status === 'finished'
-                ? 'Terminé'
-                : format(matchDate, 'dd MMM yyyy', { locale: fr })}
+              ? 'Terminé'
+              : format(matchDate, 'dd MMM yyyy', { locale: fr })}
           </Badge>
           {match.status === 'scheduled' && (
             <span className="text-sm text-muted-foreground">{match.time}</span>
@@ -44,8 +39,16 @@ export function MatchCard({ match }: MatchCardProps) {
 
         <div className="grid grid-cols-3 items-center gap-4">
           <div className="flex flex-col items-center space-y-2">
-            <div className="text-4xl">{homeTeam.logo}</div>
-            <p className="text-center text-sm font-medium">{homeTeam.name}</p>
+            <div className="h-14 w-14 relative">
+              <Image
+                src={match.homeTeamLogo}
+                alt={`${match.homeTeamName} logo`}
+                fill
+                sizes="56px"
+                className="object-contain"
+              />
+            </div>
+            <p className="text-center text-sm font-medium">{match.homeTeamName}</p>
           </div>
 
           <div className="flex flex-col items-center justify-center space-y-1">
@@ -58,14 +61,19 @@ export function MatchCard({ match }: MatchCardProps) {
             ) : (
               <span className="text-lg font-semibold text-muted-foreground">VS</span>
             )}
-            {match.status === 'live' && match.quarter && (
-              <span className="text-xs text-muted-foreground">{match.quarter}</span>
-            )}
           </div>
 
           <div className="flex flex-col items-center space-y-2">
-            <div className="text-4xl">{awayTeam.logo}</div>
-            <p className="text-center text-sm font-medium">{awayTeam.name}</p>
+            <div className="h-14 w-14 relative">
+              <Image
+                src={match.awayTeamLogo}
+                alt={`${match.awayTeamName} logo`}
+                fill
+                sizes="56px"
+                className="object-contain"
+              />
+            </div>
+            <p className="text-center text-sm font-medium">{match.awayTeamName}</p>
           </div>
         </div>
 

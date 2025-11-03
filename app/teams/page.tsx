@@ -1,13 +1,19 @@
 import { Metadata } from 'next';
-import { teams } from '@/data/teams';
+import { fetchTeams } from '@/lib/api/server';
 import { TeamCard } from '@/components/cards/team-card';
+import { REVALIDATE_TIME } from '@/lib/config/api';
 
 export const metadata: Metadata = {
-  title: 'Équipes - African Basketball League',
-  description: 'Découvrez toutes les équipes de la ligue africaine de basketball professionnel.',
+  title: 'Équipes - Basketball Africa League',
+  description: 'Découvrez toutes les équipes de la Basketball Africa League (BAL).',
 };
 
-export default function TeamsPage() {
+// ISR - Revalidation toutes les 24 heures
+export const revalidate = REVALIDATE_TIME.teams;
+
+export default async function TeamsPage() {
+  const teams = await fetchTeams();
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mb-12 text-center">
@@ -18,15 +24,23 @@ export default function TeamsPage() {
           Nos Équipes
         </h1>
         <p className="text-xl text-muted-foreground">
-          {teams.length} équipes professionnelles à travers l'Afrique
+          {teams.length > 0
+            ? `${teams.length} équipes professionnelles de la Basketball Africa League`
+            : 'Chargement des équipes...'}
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {teams.map((team) => (
-          <TeamCard key={team.id} team={team} />
-        ))}
-      </div>
+      {teams.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Aucune équipe disponible pour le moment.</p>
+        </div>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {teams.map((team) => (
+            <TeamCard key={team.id} team={team} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

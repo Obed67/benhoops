@@ -1,4 +1,4 @@
-import { Player } from '@/data/teams';
+import type { Player } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface PlayerCardProps {

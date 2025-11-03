@@ -1,14 +1,20 @@
 import { Metadata } from 'next';
-import { matches } from '@/data/matches';
+import { fetchMatches } from '@/lib/api/server';
+import { REVALIDATE_TIME } from '@/lib/config/api';
 import { MatchCard } from '@/components/cards/match-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export const metadata: Metadata = {
-  title: 'Calendrier - African Basketball League',
-  description: 'Consultez tous les matchs passés et à venir de la ligue africaine de basketball.',
+  title: 'Calendrier - Basketball Africa League',
+  description: 'Consultez tous les matchs passés et à venir de la Basketball Africa League.',
 };
 
-export default function SchedulePage() {
+// ISR - Revalidation toutes les heures
+export const revalidate = REVALIDATE_TIME.matches;
+
+export default async function SchedulePage() {
+  const matches = await fetchMatches();
+
   const finishedMatches = matches.filter((m) => m.status === 'finished');
   const upcomingMatches = matches.filter((m) => m.status === 'scheduled');
   const liveMatches = matches.filter((m) => m.status === 'live');
@@ -22,22 +28,14 @@ export default function SchedulePage() {
         >
           Calendrier des Matchs
         </h1>
-        <p className="text-xl text-muted-foreground">
-          Suivez tous les matchs de la saison
-        </p>
+        <p className="text-xl text-muted-foreground">Suivez tous les matchs de la saison</p>
       </div>
 
       <Tabs defaultValue="upcoming" className="w-full">
         <TabsList className="mb-8 grid w-full grid-cols-3 lg:w-[400px] lg:mx-auto">
-          <TabsTrigger value="upcoming">
-            À venir ({upcomingMatches.length})
-          </TabsTrigger>
-          <TabsTrigger value="live">
-            En direct ({liveMatches.length})
-          </TabsTrigger>
-          <TabsTrigger value="finished">
-            Terminés ({finishedMatches.length})
-          </TabsTrigger>
+          <TabsTrigger value="upcoming">À venir ({upcomingMatches.length})</TabsTrigger>
+          <TabsTrigger value="live">En direct ({liveMatches.length})</TabsTrigger>
+          <TabsTrigger value="finished">Terminés ({finishedMatches.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="upcoming" className="space-y-6">

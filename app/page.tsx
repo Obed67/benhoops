@@ -1,22 +1,27 @@
 import Link from 'next/link';
-import { matches } from '@/data/matches';
-import { teams } from '@/data/teams';
-import { players } from '@/data/teams';
+import { fetchMatches, fetchTeams, fetchPlayers } from '@/lib/api/server';
+import { REVALIDATE_TIME } from '@/lib/config/api';
 import { MatchCard } from '@/components/cards/match-card';
 import { TeamCard } from '@/components/cards/team-card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, TrendingUp, Users, Calendar } from 'lucide-react';
 
-export default function Home() {
-  const recentMatches = matches
-    .filter((m) => m.status === 'finished')
-    .slice(0, 3);
-  const upcomingMatches = matches
-    .filter((m) => m.status === 'scheduled')
-    .slice(0, 3);
+// ISR - Revalidation toutes les heures
+export const revalidate = REVALIDATE_TIME.matches;
+
+export default async function Home() {
+  const [matches, teams, players] = await Promise.all([
+    fetchMatches(),
+    fetchTeams(),
+    fetchPlayers(),
+  ]);
+
+  const recentMatches = matches.filter((m) => m.status === 'finished').slice(0, 3);
+  const upcomingMatches = matches.filter((m) => m.status === 'scheduled').slice(0, 3);
   const featuredTeams = teams.slice(0, 4);
   const topPlayers = players
-    .sort((a, b) => b.points - a.points)
+    .filter((p) => p.points !== undefined)
+    .sort((a, b) => (b.points || 0) - (a.points || 0))
     .slice(0, 3);
 
   return (
