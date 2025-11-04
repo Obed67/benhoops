@@ -41,7 +41,7 @@ export default async function SchedulePage() {
           {upcomingMatches.length > 0 ? (
             <div className="flex flex-wrap justify-center gap-6">
               {upcomingMatches.map((match) => (
-                <div key={match.id} className="w-[400px]">
+                <div key={match.id} className="w-full sm:w-[400px]">
                   <MatchCard match={match} />
                 </div>
               ))}
@@ -57,7 +57,7 @@ export default async function SchedulePage() {
           {liveMatches.length > 0 ? (
             <div className="flex flex-wrap justify-center gap-6">
               {liveMatches.map((match) => (
-                <div key={match.id} className="w-[400px]">
+                <div key={match.id} className="w-full sm:w-[400px]">
                   <MatchCard match={match} />
                 </div>
               ))}
@@ -73,7 +73,7 @@ export default async function SchedulePage() {
           {finishedMatches.length > 0 ? (
             <div className="flex flex-wrap justify-center gap-6">
               {finishedMatches.map((match) => (
-                <div key={match.id} className="w-[400px]">
+                <div key={match.id} className="w-full sm:w-[400px]">
                   <MatchCard match={match} />
                 </div>
               ))}

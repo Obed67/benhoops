@@ -22,12 +22,12 @@ export function MatchCard({ match }: MatchCardProps) {
       {/* Header avec gradient */}
       <div className="relative h-2 bg-gradient-to-r from-orange-500 via-red-500 to-orange-500"></div>
 
-      <CardContent className="p-6">
+      <CardContent className="p-4 sm:p-6">
         {/* Status et Date */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-4 sm:mb-6 flex items-center justify-between gap-2 flex-wrap">
           <Badge
             variant={isLive ? 'default' : isFinished ? 'secondary' : 'outline'}
-            className={`${
+            className={`text-xs sm:text-sm ${
               isLive
                 ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white animate-pulse shadow-lg shadow-orange-500/50'
                 : isFinished
@@ -51,18 +51,18 @@ export function MatchCard({ match }: MatchCardProps) {
           </Badge>
 
           {!isFinished && !isLive && (
-            <div className="flex items-center gap-1.5 text-sm text-orange-600 dark:text-orange-500 font-semibold">
-              <Clock className="h-4 w-4" />
+            <div className="flex items-center gap-1.5 text-xs sm:text-sm text-orange-600 dark:text-orange-500 font-semibold">
+              <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               {match.time}
             </div>
           )}
         </div>
 
         {/* Équipes et Scores */}
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-8">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 sm:gap-6 md:gap-8">
           {/* Équipe domicile */}
           <div
-            className={`flex flex-col items-center space-y-4 transition-all duration-300 ${
+            className={`flex flex-col items-center space-y-2 sm:space-y-3 md:space-y-4 transition-all duration-300 ${
               homeWon ? 'scale-105' : awayWon ? 'opacity-60' : ''
             }`}
           >
@@ -72,40 +72,42 @@ export function MatchCard({ match }: MatchCardProps) {
                   homeWon ? 'bg-orange-500/40 opacity-100' : 'opacity-0'
                 }`}
               ></div>
-              <div className="relative h-24 w-24 rounded-full bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-3 ring-2 ring-orange-200 dark:ring-orange-900/30 group-hover:ring-orange-400 dark:group-hover:ring-orange-600 transition-all">
+              <div className="relative h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 rounded-full bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-2 sm:p-2.5 md:p-3 ring-2 ring-orange-200 dark:ring-orange-900/30 group-hover:ring-orange-400 dark:group-hover:ring-orange-600 transition-all">
                 <Image
                   src={match.homeTeamLogo}
                   alt={`${match.homeTeamName} logo`}
                   fill
-                  sizes="96px"
-                  className="object-contain p-1"
+                  sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, 96px"
+                  className="object-contain p-0.5 sm:p-1"
                 />
               </div>
               {homeWon && (
-                <div className="absolute -top-1 -right-1 h-7 w-7 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                <div className="absolute -top-1 -right-1 h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white text-[10px] sm:text-xs font-bold shadow-lg">
                   ✓
                 </div>
               )}
             </div>
-            <p className="text-center text-sm font-bold text-foreground group-hover:text-orange-600 dark:group-hover:text-orange-500 transition-colors line-clamp-2 max-w-[120px]">
+            <p className="text-center text-[10px] sm:text-xs md:text-sm font-bold text-foreground group-hover:text-orange-600 dark:group-hover:text-orange-500 transition-colors line-clamp-2 max-w-[80px] sm:max-w-[100px] md:max-w-[120px]">
               {match.homeTeamName}
             </p>
           </div>
 
           {/* Score ou VS - Centré verticalement */}
-          <div className="flex flex-col items-center justify-center min-w-[100px] self-center">
+          <div className="flex flex-col items-center justify-center min-w-[60px] sm:min-w-[80px] md:min-w-[100px] self-center">
             {isFinished || isLive ? (
-              <div className="flex items-center justify-center gap-3">
+              <div className="flex items-center justify-center gap-2 sm:gap-2.5 md:gap-3">
                 <span
-                  className={`text-3xl font-black tabular-nums ${
+                  className={`text-xl sm:text-2xl md:text-3xl font-black tabular-nums ${
                     homeWon ? 'text-orange-600 dark:text-orange-500' : 'text-foreground'
                   }`}
                 >
                   {match.homeScore}
                 </span>
-                <span className="text-xl font-bold text-muted-foreground">-</span>
+                <span className="text-base sm:text-lg md:text-xl font-bold text-muted-foreground">
+                  -
+                </span>
                 <span
-                  className={`text-3xl font-black tabular-nums ${
+                  className={`text-xl sm:text-2xl md:text-3xl font-black tabular-nums ${
                     awayWon ? 'text-orange-600 dark:text-orange-500' : 'text-foreground'
                   }`}
                 >
@@ -115,7 +117,7 @@ export function MatchCard({ match }: MatchCardProps) {
             ) : (
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-600 blur-md opacity-20"></div>
-                <span className="relative text-xl font-black bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 dark:from-orange-500 dark:via-red-500 dark:to-orange-500 bg-clip-text text-transparent">
+                <span className="relative text-base sm:text-lg md:text-xl font-black bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 dark:from-orange-500 dark:via-red-500 dark:to-orange-500 bg-clip-text text-transparent">
                   VS
                 </span>
               </div>
@@ -124,7 +126,7 @@ export function MatchCard({ match }: MatchCardProps) {
 
           {/* Équipe extérieure */}
           <div
-            className={`flex flex-col items-center space-y-4 transition-all duration-300 ${
+            className={`flex flex-col items-center space-y-2 sm:space-y-3 md:space-y-4 transition-all duration-300 ${
               awayWon ? 'scale-105' : homeWon ? 'opacity-60' : ''
             }`}
           >
@@ -134,22 +136,22 @@ export function MatchCard({ match }: MatchCardProps) {
                   awayWon ? 'bg-orange-500/40 opacity-100' : 'opacity-0'
                 }`}
               ></div>
-              <div className="relative h-24 w-24 rounded-full bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-3 ring-2 ring-orange-200 dark:ring-orange-900/30 group-hover:ring-orange-400 dark:group-hover:ring-orange-600 transition-all">
+              <div className="relative h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 rounded-full bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-2 sm:p-2.5 md:p-3 ring-2 ring-orange-200 dark:ring-orange-900/30 group-hover:ring-orange-400 dark:group-hover:ring-orange-600 transition-all">
                 <Image
                   src={match.awayTeamLogo}
                   alt={`${match.awayTeamName} logo`}
                   fill
-                  sizes="96px"
-                  className="object-contain p-1"
+                  sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, 96px"
+                  className="object-contain p-0.5 sm:p-1"
                 />
               </div>
               {awayWon && (
-                <div className="absolute -top-1 -right-1 h-7 w-7 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                <div className="absolute -top-1 -right-1 h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white text-[10px] sm:text-xs font-bold shadow-lg">
                   ✓
                 </div>
               )}
             </div>
-            <p className="text-center text-sm font-bold text-foreground group-hover:text-orange-600 dark:group-hover:text-orange-500 transition-colors line-clamp-2 max-w-[120px]">
+            <p className="text-center text-[10px] sm:text-xs md:text-sm font-bold text-foreground group-hover:text-orange-600 dark:group-hover:text-orange-500 transition-colors line-clamp-2 max-w-[80px] sm:max-w-[100px] md:max-w-[120px]">
               {match.awayTeamName}
             </p>
           </div>
@@ -157,10 +159,10 @@ export function MatchCard({ match }: MatchCardProps) {
 
         {/* Venue */}
         {match.venue && (
-          <div className="mt-6 pt-4 border-t border-orange-200/30 dark:border-orange-900/30">
-            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-              <MapPin className="h-3.5 w-3.5 text-orange-600 dark:text-orange-500" />
-              <span>{match.venue}</span>
+          <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-orange-200/30 dark:border-orange-900/30">
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-xs text-muted-foreground">
+              <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-orange-600 dark:text-orange-500 flex-shrink-0" />
+              <span className="truncate">{match.venue}</span>
             </div>
           </div>
         )}
