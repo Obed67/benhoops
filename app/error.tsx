@@ -32,9 +32,7 @@ export default function Error({
         <CardContent className="space-y-4">
           {process.env.NODE_ENV === 'development' && (
             <div className="rounded-lg bg-muted p-4">
-              <p className="text-sm font-mono text-muted-foreground break-all">
-                {error.message}
-              </p>
+              <p className="text-sm font-mono text-muted-foreground break-all">{error.message}</p>
             </div>
           )}
           <div className="flex gap-2 justify-center">

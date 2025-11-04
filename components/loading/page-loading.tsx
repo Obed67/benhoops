@@ -6,10 +6,10 @@ interface PageLoadingProps {
   showSpinner?: boolean;
 }
 
-export function PageLoading({ 
-  text = 'Chargement...', 
+export function PageLoading({
+  text = 'Chargement...',
   size = 'xl',
-  showSpinner = true 
+  showSpinner = true,
 }: PageLoadingProps) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">

@@ -37,7 +37,7 @@ export function EmptyState({
 
 export function ErrorState({
   title = 'Une erreur est survenue',
-  description = "Impossible de charger les données. Veuillez réessayer plus tard.",
+  description = 'Impossible de charger les données. Veuillez réessayer plus tard.',
   retry,
 }: {
   title?: string;
