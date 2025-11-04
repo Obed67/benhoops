@@ -38,8 +38,9 @@ export async function generateStaticParams() {
   try {
     const teams = await getNBATeams();
 
-    // Ne pré-générer que les 5 premières équipes pour éviter l'erreur 429
-    const limitedTeams = teams.slice(0, 5);
+    // Ne pré-générer que 3 équipes pour minimiser les appels API au build
+    // L'API gratuite limite à ~10 req/min, chaque page team = 3 requêtes (team + players + matches)
+    const limitedTeams = teams.slice(0, 3);
 
     return limitedTeams.map((team) => ({
       id: team.id,

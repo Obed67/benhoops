@@ -28,16 +28,16 @@ interface MatchPageProps {
 }
 
 // Limiter le nombre de pages statiques générées pour éviter l'erreur 429
-// Génère uniquement les 5 derniers matchs pendant le build
+// Génère uniquement les 3 derniers matchs pendant le build
 // Les autres matchs seront générés à la demande (ISR)
 export async function generateStaticParams() {
   try {
     const matches = await getAllNBAMatches();
 
-    // Ne pré-générer que les 5 derniers matchs pour éviter l'erreur 429
+    // Ne pré-générer que 3 matchs pour minimiser les appels API au build
     const recentMatches = matches
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 5);
+      .slice(0, 3);
 
     return recentMatches.map((match) => ({
       id: match.id,

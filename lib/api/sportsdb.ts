@@ -42,32 +42,53 @@ async function fetchFromAPI<T>(
   }
 ): Promise<T> {
   const url = buildApiUrl(endpoint);
+  const maxRetries = 2; // Nombre de tentatives en cas d'erreur 429
 
-  try {
-    // Petit délai pour éviter de surcharger l'API (100ms)
-    await delay(100);
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      // Délai important pour éviter 429 (Too Many Requests) sur l'API gratuite
+      // L'API gratuite limite à ~10 requêtes par minute = 1 requête toutes les 6 secondes
+      await delay(500); // 500ms minimum entre chaque requête
 
-    const response = await fetch(url, {
-      next: {
-        revalidate: options?.revalidate ?? 3600, // Par défaut: 1 heure
-        tags: options?.tags,
-      },
-      cache: options?.cache,
-    });
+      const response = await fetch(url, {
+        next: {
+          revalidate: options?.revalidate ?? 3600, // Par défaut: 1 heure
+          tags: options?.tags,
+        },
+        cache: options?.cache,
+      });
 
-    if (!response.ok) {
-      console.error(`API Error: ${response.status} ${response.statusText} - ${url}`);
-      // Retourner un objet vide au lieu de throw pour éviter de casser la page
-      return {} as T;
+      if (!response.ok) {
+        // Si 429 et pas la dernière tentative, attendre plus longtemps et réessayer
+        if (response.status === 429 && attempt < maxRetries) {
+          const waitTime = 2000 * attempt; // Augmenter l'attente à chaque tentative
+          console.warn(
+            `⚠️  429 Rate Limit - Tentative ${attempt}/${maxRetries} - Attente ${waitTime}ms`
+          );
+          await delay(waitTime);
+          continue; // Réessayer
+        }
+
+        console.error(`API Error: ${response.status} ${response.statusText} - ${url}`);
+        // Retourner un objet vide au lieu de throw pour éviter de casser la page
+        return {} as T;
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      if (attempt === maxRetries) {
+        console.error(`Error fetching ${endpoint}:`, error);
+        // Retourner un objet vide au lieu de throw
+        return {} as T;
+      }
+      // Si ce n'est pas la dernière tentative, attendre et réessayer
+      await delay(2000);
     }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(`Error fetching ${endpoint}:`, error);
-    // Retourner un objet vide au lieu de throw
-    return {} as T;
   }
+
+  // Fallback (ne devrait jamais arriver ici)
+  return {} as T;
 }
 
 // ============================================
@@ -81,22 +102,26 @@ async function fetchFromAPI<T>(
 export async function getNBATeams(): Promise<Team[]> {
   try {
     const leagueName = encodeURIComponent(SPORTSDB_CONFIG.leagueName);
+    const endpoint = `search_all_teams.php?l=${leagueName}`;
+
+    console.log(`[getNBATeams] Fetching from: ${buildApiUrl(endpoint)}`);
+
     const data = await fetchFromAPI<SportsDBTeamsResponse>(
-      `search_all_teams.php?l=${leagueName}`,
+      endpoint,
       { revalidate: 86400, tags: ['nba-teams'] } // ISR: 24h
     );
 
     if (!data || !data.teams || data.teams.length === 0) {
-      console.warn('Aucune équipe trouvée pour la NBA ou erreur API');
-      console.warn('Response data:', JSON.stringify(data).substring(0, 200));
+      console.warn('❌ [getNBATeams] Aucune équipe trouvée pour la NBA ou erreur API');
+      console.warn('[getNBATeams] Response data:', JSON.stringify(data).substring(0, 300));
       return [];
     }
 
     const teams = data.teams.map(normalizeTeam);
-    console.log(`✅ ${teams.length} équipes NBA récupérées avec succès`);
+    console.log(`✅ [getNBATeams] ${teams.length} équipes NBA récupérées avec succès`);
     return teams;
   } catch (error) {
-    console.error('❌ Error fetching NBA teams:', error);
+    console.error('❌ [getNBATeams] Error fetching NBA teams:', error);
     return [];
   }
 }
