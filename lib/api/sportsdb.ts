@@ -10,6 +10,13 @@ import {
 import { normalizeTeam, normalizePlayer, normalizeMatch } from './transformers';
 
 // ============================================
+// CACHE EN MÉMOIRE POUR ÉVITER LES APPELS RÉPÉTÉS
+// ============================================
+
+// Cache global pour stocker les résultats pendant le build
+const apiCache = new Map<string, any>();
+
+// ============================================
 // HELPER FETCH OPTIMISÉ POUR NEXT.JS 14
 // ============================================
 
@@ -29,7 +36,7 @@ function delay(ms: number): Promise<void> {
 
 /**
  * Fetch wrapper optimisé pour Next.js 14 Server Components
- * Utilise les options de cache natives de Next.js
+ * Utilise les options de cache natives de Next.js + cache mémoire pour build
  * Inclut un délai pour éviter les erreurs 429
  * Retourne un objet vide en cas d'erreur pour éviter de casser la page
  */
@@ -39,9 +46,20 @@ async function fetchFromAPI<T>(
     revalidate?: number | false; // ISR: secondes avant revalidation
     cache?: 'force-cache' | 'no-store'; // SSG ou SSR
     tags?: string[]; // Pour revalidateTag
+    useMemoryCache?: boolean; // Utiliser le cache mémoire (pour build)
   }
 ): Promise<T> {
   const url = buildApiUrl(endpoint);
+  
+  // Vérifier le cache mémoire si activé (évite les appels répétés pendant le build)
+  if (options?.useMemoryCache !== false) {
+    const cached = apiCache.get(endpoint);
+    if (cached) {
+      console.log(`📦 [CACHE HIT] ${endpoint}`);
+      return cached;
+    }
+  }
+  
   const maxRetries = 2; // Nombre de tentatives en cas d'erreur 429
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -75,6 +93,13 @@ async function fetchFromAPI<T>(
       }
 
       const data = await response.json();
+      
+      // Stocker dans le cache mémoire pour réutilisation
+      if (options?.useMemoryCache !== false) {
+        apiCache.set(endpoint, data);
+        console.log(`💾 [CACHE SET] ${endpoint}`);
+      }
+      
       return data;
     } catch (error) {
       if (attempt === maxRetries) {
@@ -98,6 +123,7 @@ async function fetchFromAPI<T>(
 /**
  * Récupère toutes les équipes NBA
  * Utilise ISR avec revalidation toutes les 24h (86400 secondes)
+ * Active le cache mémoire pour éviter les appels répétés au build
  */
 export async function getNBATeams(): Promise<Team[]> {
   try {
@@ -108,7 +134,11 @@ export async function getNBATeams(): Promise<Team[]> {
 
     const data = await fetchFromAPI<SportsDBTeamsResponse>(
       endpoint,
-      { revalidate: 86400, tags: ['nba-teams'] } // ISR: 24h
+      { 
+        revalidate: 86400, 
+        tags: ['nba-teams'],
+        useMemoryCache: true // ACTIVER le cache mémoire pour éviter 429
+      }
     );
 
     if (!data || !data.teams || data.teams.length === 0) {
@@ -312,8 +342,9 @@ export async function getAllNBAMatches(season?: string): Promise<Match[]> {
       fetchFromAPI<SportsDBEventsResponse>(`eventsseason.php?id=${leagueId}&s=${currentSeason}`, {
         revalidate: 3600,
         tags: ['all-matches', `season-${currentSeason}`],
+        useMemoryCache: true, // Cache mémoire activé
       }),
-      getNBATeams(),
+      getNBATeams(), // Utilise déjà le cache mémoire
     ]);
 
     if (!matchesData.events || matchesData.events.length === 0) {
