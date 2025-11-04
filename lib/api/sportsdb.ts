@@ -50,7 +50,7 @@ async function fetchFromAPI<T>(
   }
 ): Promise<T> {
   const url = buildApiUrl(endpoint);
-  
+
   // Vérifier le cache mémoire si activé (évite les appels répétés pendant le build)
   if (options?.useMemoryCache !== false) {
     const cached = apiCache.get(endpoint);
@@ -59,7 +59,7 @@ async function fetchFromAPI<T>(
       return cached;
     }
   }
-  
+
   const maxRetries = 2; // Nombre de tentatives en cas d'erreur 429
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -93,13 +93,13 @@ async function fetchFromAPI<T>(
       }
 
       const data = await response.json();
-      
+
       // Stocker dans le cache mémoire pour réutilisation
       if (options?.useMemoryCache !== false) {
         apiCache.set(endpoint, data);
         console.log(`💾 [CACHE SET] ${endpoint}`);
       }
-      
+
       return data;
     } catch (error) {
       if (attempt === maxRetries) {
@@ -132,14 +132,11 @@ export async function getNBATeams(): Promise<Team[]> {
 
     console.log(`[getNBATeams] Fetching from: ${buildApiUrl(endpoint)}`);
 
-    const data = await fetchFromAPI<SportsDBTeamsResponse>(
-      endpoint,
-      { 
-        revalidate: 86400, 
-        tags: ['nba-teams'],
-        useMemoryCache: true // ACTIVER le cache mémoire pour éviter 429
-      }
-    );
+    const data = await fetchFromAPI<SportsDBTeamsResponse>(endpoint, {
+      revalidate: 86400,
+      tags: ['nba-teams'],
+      useMemoryCache: true, // ACTIVER le cache mémoire pour éviter 429
+    });
 
     if (!data || !data.teams || data.teams.length === 0) {
       console.warn('❌ [getNBATeams] Aucune équipe trouvée pour la NBA ou erreur API');
