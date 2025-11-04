@@ -31,6 +31,7 @@ function delay(ms: number): Promise<void> {
  * Fetch wrapper optimisé pour Next.js 14 Server Components
  * Utilise les options de cache natives de Next.js
  * Inclut un délai pour éviter les erreurs 429
+ * Retourne un objet vide en cas d'erreur pour éviter de casser la page
  */
 async function fetchFromAPI<T>(
   endpoint: string,
@@ -55,13 +56,17 @@ async function fetchFromAPI<T>(
     });
 
     if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      console.error(`API Error: ${response.status} ${response.statusText} - ${url}`);
+      // Retourner un objet vide au lieu de throw pour éviter de casser la page
+      return {} as T;
     }
 
-    return response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(`Error fetching ${endpoint}:`, error);
-    throw error;
+    // Retourner un objet vide au lieu de throw
+    return {} as T;
   }
 }
 
@@ -81,14 +86,17 @@ export async function getNBATeams(): Promise<Team[]> {
       { revalidate: 86400, tags: ['nba-teams'] } // ISR: 24h
     );
 
-    if (!data.teams || data.teams.length === 0) {
-      console.warn('Aucune équipe trouvée pour la NBA');
+    if (!data || !data.teams || data.teams.length === 0) {
+      console.warn('Aucune équipe trouvée pour la NBA ou erreur API');
+      console.warn('Response data:', JSON.stringify(data).substring(0, 200));
       return [];
     }
 
-    return data.teams.map(normalizeTeam);
+    const teams = data.teams.map(normalizeTeam);
+    console.log(`✅ ${teams.length} équipes NBA récupérées avec succès`);
+    return teams;
   } catch (error) {
-    console.error('Error fetching NBA teams:', error);
+    console.error('❌ Error fetching NBA teams:', error);
     return [];
   }
 }
