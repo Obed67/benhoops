@@ -7,6 +7,7 @@ import { PlayerCard } from '@/components/cards/player-card';
 import { MatchCard } from '@/components/cards/match-card';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ExpandableText } from '@/components/ui/expandable-text';
 import { MapPin, Users, Trophy, Calendar, ArrowLeft } from 'lucide-react';
 
 interface TeamPageProps {
@@ -248,9 +249,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
           <Card>
             <CardContent className="p-6">
               <h2 className="text-2xl font-bold mb-4">À propos de {team.name}</h2>
-              <p className="text-muted-foreground leading-relaxed line-clamp-6">
-                {team.description}
-              </p>
+              <ExpandableText text={team.description} maxLines={6} />
             </CardContent>
           </Card>
         </section>
