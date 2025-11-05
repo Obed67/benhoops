@@ -33,7 +33,9 @@ export default async function SchedulePage() {
             <ScheduleExportButtons matches={matches} />
           </div>
         </div>
-        <p className="text-lg sm:text-xl text-muted-foreground text-center">Suivez tous les matchs de la saison</p>
+        <p className="text-lg sm:text-xl text-muted-foreground text-center">
+          Suivez tous les matchs de la saison
+        </p>
       </div>
 
       <Tabs defaultValue="upcoming" className="w-full">

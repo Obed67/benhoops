@@ -41,7 +41,9 @@ export default async function StatsPage() {
               <h1 className="text-3xl sm:text-4xl font-black tracking-tight bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 dark:from-orange-500 dark:via-red-500 dark:to-orange-500 bg-clip-text text-transparent">
                 Statistiques NBA
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground">Analyses avancées et comparaisons d'équipes</p>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Analyses avancées et comparaisons d'équipes
+              </p>
             </div>
           </div>
           <div className="sm:self-start">
