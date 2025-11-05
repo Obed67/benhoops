@@ -4,6 +4,7 @@ import { Inter, Bebas_Neue } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Navbar } from '@/components/navigation/navbar';
 import { Footer } from '@/components/navigation/footer';
+import { UpdateNotifier } from '@/components/update-notifier';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const bebasNeue = Bebas_Neue({
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
+          <UpdateNotifier />
         </ThemeProvider>
         <script
           dangerouslySetInnerHTML={{
