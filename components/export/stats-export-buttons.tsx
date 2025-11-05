@@ -83,13 +83,14 @@ export function StatsExportButtons({ stats }: StatsExportButtonsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="gap-2" disabled={isExporting || stats.length === 0}>
+        <Button variant="outline" className="gap-2 w-full sm:w-auto" disabled={isExporting || stats.length === 0}>
           {isExporting ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <Download className="h-4 w-4" />
           )}
-          Exporter
+          <span className="hidden sm:inline">Exporter</span>
+          <span className="sm:hidden">Export</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
@@ -97,15 +98,15 @@ export function StatsExportButtons({ stats }: StatsExportButtonsProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleExportCSV} className="cursor-pointer">
           <Sheet className="mr-2 h-4 w-4" />
-          <span>CSV</span>
+          <span>Exporter en CSV</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleExportJSON} className="cursor-pointer">
           <FileJson className="mr-2 h-4 w-4" />
-          <span>JSON</span>
+          <span>Exporter en JSON</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleExportPDF} className="cursor-pointer">
           <FileText className="mr-2 h-4 w-4" />
-          <span>PDF</span>
+          <span>Exporter en PDF</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

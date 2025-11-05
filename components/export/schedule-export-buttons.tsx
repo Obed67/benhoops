@@ -64,13 +64,14 @@ export function ScheduleExportButtons({ matches }: ScheduleExportButtonsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="gap-2" disabled={isExporting || matches.length === 0}>
+        <Button variant="outline" className="gap-2 w-full sm:w-auto" disabled={isExporting || matches.length === 0}>
           {isExporting ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <Download className="h-4 w-4" />
           )}
-          Exporter
+          <span className="hidden sm:inline">Exporter</span>
+          <span className="sm:hidden">Export</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">

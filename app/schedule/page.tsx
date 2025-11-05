@@ -21,17 +21,19 @@ export default async function SchedulePage() {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="mb-12 text-center">
-        <div className="flex items-center justify-center gap-4 mb-4 flex-wrap">
+      <div className="mb-12">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4 mb-4">
           <h1
-            className="text-5xl font-bold md:text-6xl"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold text-center"
             style={{ fontFamily: 'var(--font-bebas)' }}
           >
             Calendrier des Matchs
           </h1>
-          <ScheduleExportButtons matches={matches} />
+          <div className="sm:ml-4">
+            <ScheduleExportButtons matches={matches} />
+          </div>
         </div>
-        <p className="text-xl text-muted-foreground">Suivez tous les matchs de la saison</p>
+        <p className="text-lg sm:text-xl text-muted-foreground text-center">Suivez tous les matchs de la saison</p>
       </div>
 
       <Tabs defaultValue="upcoming" className="w-full">
