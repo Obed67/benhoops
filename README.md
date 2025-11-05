@@ -2,21 +2,111 @@
 
 Application web moderne pour suivre la NBA en temps réel. Statistiques, classements, calendrier et profils d'équipes avec données live via l'API TheSportsDB.
 
-[![Next.js](https://img.shields.io/badge/Next.js-13.5-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.2-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-14.2.15-black?logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18.3.1-61dafb?logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3.3-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## ✨ Fonctionnalités
 
-- 🏀 **Équipes NBA** - Logos, stats, profils complets
-- 📊 **Classement en direct** - Conférence Est/Ouest avec statistiques
-- 📅 **Calendrier complet** - Matchs passés et à venir
-- 🔍 **Recherche avancée** - Équipes, joueurs et matchs
-- 🌓 **Dark Mode** - Interface adaptative avec next-themes
-- ⚡ **Performance optimale** - ISR + cache mémoire pour vitesse maximale
-- 📱 **Responsive Design** - Mobile-first avec Tailwind CSS
-- 🎨 **UI moderne** - shadcn/ui + Radix UI components
+### 📋 Fonctionnalités Attendues
+
+#### ✅ Résultats récents
+
+- Affichage des derniers matchs NBA sur la homepage
+- Scores finaux et statut des matchs
+- Actualisation automatique avec ISR (5 minutes)
+
+#### ✅ Gestion des équipes
+
+- **Liste complète** - 30 équipes NBA avec pagination (12/page)
+- **Détail équipe** - Logo, stade, description, couleurs officielles
+- **Roster complet** - 780+ joueurs avec positions, photos, stats
+
+#### ✅ Calendrier et résultats des matchs
+
+- Matchs passés, à venir et en cours
+- Pagination intelligente (9-12 matchs/page)
+- Filtrage par statut (Live, À venir, Terminés)
+- Détails complets de chaque match
+
+#### ✅ Classements de la ligue
+
+- Conférence Est et Ouest
+- Statistiques détaillées (V-D, %, Streak)
+- Mise à jour fréquente (ISR 5 minutes)
+
+#### ✅ Recherche globale
+
+- Recherche multi-critères (équipes, joueurs, matchs)
+- Résultats paginés (12/page)
+- Debounce pour performance optimale
+
+#### ✅ Navigation responsive
+
+- Design mobile-first
+- Menu adaptatif
+- Footer complet avec toutes les sections
+- Navigation fluide entre les pages
+
+#### ✅ Mode sombre/clair
+
+- Toggle dark/light avec next-themes
+- Transition fluide
+- Préférence sauvegardée
+- Couleurs NBA optimisées pour les deux modes
+
+#### ✅ Optimisation SEO
+
+- Metadata complète sur toutes les pages
+- Open Graph pour réseaux sociaux
+- Structure sémantique HTML
+- URLs optimisées
+
+#### ✅ Animations fluides
+
+- Transitions Tailwind CSS
+- Loading states élégants avec skeletons
+- Animations sur interactions (hover, click)
+- Scroll smooth automatique
+
+---
+
+### 🎁 Bonus Créatifs
+
+#### ✅ Statistiques avancées avec data visualization
+
+- **Graphiques interactifs** - Recharts pour visualisation moderne
+- **Vue d'ensemble ligue** - Stats globales NBA (moyennes, totaux)
+- **Comparaison équipes** - Graphiques radar head-to-head
+- **Top performers** - Classement par victoires, points, efficacité
+- **Charts dynamiques** - Bar charts, line charts, radar charts
+
+#### ✅ Mode spectateur live (simulation temps réel)
+
+- **Auto-refresh** - Actualisation automatique toutes les 30 secondes
+- **Pause/Resume** - Contrôle manuel du refresh
+- **Matchs en cours** - Section dédiée aux matchs live
+- **Updates temps réel** - Scores qui se mettent à jour automatiquement
+- **Statut visuel** - Indicateurs visuels pour matchs en direct
+
+#### ✅ Système de notifications push
+
+- **PWA complet** - Application installable (mobile + desktop)
+- **Push notifications** - Alertes pour matchs importants
+- **Gestion permissions** - Interface pour activer/désactiver
+- **Page settings** - Configuration complète des notifications
+- **Service Worker v1.1.0** - Cache intelligent + offline mode
+- **Auto-update** - Notification des nouvelles versions
+
+#### ✅ Export de données
+
+- **Calendrier** - Export au format iCalendar (.ics)
+- **Stats** - Export CSV, JSON pour analyse externe
+- **Rapports PDF** - Génération de PDF pour calendrier et stats
+- **Boutons dédiés** - Interface simple sur /schedule et /stats
+- **Données complètes** - Export de toutes les informations disponibles
 
 ## 🚀 Démarrage Rapide
 
@@ -50,11 +140,14 @@ pnpm install
 Créer `.env.local` (la clé par défaut fonctionne):
 
 ```bash
-# Clé API TheSportsDB (gratuite: '123', limite 10 req/min)
-NEXT_PUBLIC_SPORTSDB_API_KEY=123
+# Clé API TheSportsDB (gratuite: '3', limite 10 req/min)
+NEXT_PUBLIC_SPORTSDB_API_KEY=3
 
 # Base URL API
 NEXT_PUBLIC_SPORTSDB_BASE_URL=https://www.thesportsdb.com/api/v1/json
+
+# URL de l'application (production)
+NEXT_PUBLIC_BASE_URL=https://benhoops.vercel.app
 ```
 
 4. **Lancer le serveur de développement**
@@ -79,28 +172,40 @@ npm run typecheck  # Vérifier les types TypeScript
 
 ```
 benhoops/
-├── app/                          # Next.js 13 App Router
+├── app/                          # Next.js 14 App Router
 │   ├── layout.tsx               # Layout principal avec metadata
-│   ├── page.tsx                 # 🏠 Homepage - Hero + matchs récents
+│   ├── page.tsx                 # 🏠 Homepage - Hero + matchs récents + 780 joueurs
 │   ├── loading.tsx              # Loading state global
 │   ├── error.tsx                # Error boundary global
 │   ├── not-found.tsx            # Page 404 personnalisée
 │   │
 │   ├── teams/                   # 🏀 Section Équipes
-│   │   ├── page.tsx            # Liste des équipes NBA (ISR 1h)
+│   │   ├── page.tsx            # Liste des 30 équipes NBA (ISR 1h, pagination 12/page)
 │   │   └── [id]/
 │   │       ├── page.tsx        # Profil équipe (ISR 1h)
 │   │       ├── loading.tsx     # Skeleton pour équipe
 │   │       └── error.tsx       # Error boundary équipe
 │   │
 │   ├── schedule/                # 📅 Calendrier
-│   │   └── page.tsx            # Matchs passés + à venir
+│   │   └── page.tsx            # Matchs (pagination 9-12/page, export ICS + PDF)
 │   │
 │   ├── standings/               # 📊 Classement
 │   │   └── page.tsx            # Est/Ouest avec stats (ISR 5min)
 │   │
-│   └── search/                  # 🔍 Recherche
-│       └── page.tsx            # Recherche équipes/joueurs/matchs
+│   ├── stats/                   # 📈 Statistiques Avancées (NOUVEAU)
+│   │   └── page.tsx            # Graphiques Recharts + export CSV/JSON/PDF
+│   │
+│   ├── live/                    # � Mode Live (NOUVEAU)
+│   │   └── page.tsx            # Auto-refresh 30s + pause/resume
+│   │
+│   ├── settings/                # ⚙️ Paramètres PWA (NOUVEAU)
+│   │   └── page.tsx            # Gestion notifications push
+│   │
+│   ├── search/                  # 🔍 Recherche
+│   │   └── page.tsx            # Équipes/joueurs/matchs (pagination 12/page)
+│   │
+│   └── matches/[id]/            # 🏆 Détail Match
+│       └── page.tsx            # Détails d'un match spécifique
 │
 ├── components/                   # Composants React
 │   ├── cards/
@@ -110,10 +215,34 @@ benhoops/
 │   │
 │   ├── navigation/
 │   │   ├── navbar.tsx          # Navigation principale
-│   │   └── footer.tsx          # Footer avec liens
+│   │   └── footer.tsx          # Footer avec liens (toutes les pages)
 │   │
-│   ├── search/
-│   │   └── search-input.tsx    # Input recherche avec debounce
+│   ├── stats/                   # 📈 Composants Stats (NOUVEAU)
+│   │   ├── league-overview.tsx # Vue d'ensemble ligue avec graphiques
+│   │   ├── team-comparison.tsx # Comparaison équipes (radar charts)
+│   │   └── top-performers.tsx  # Top équipes par victoires/points
+│   │
+│   ├── live/                    # 🔴 Composants Live (NOUVEAU)
+│   │   └── live-match-card.tsx # Card match avec refresh auto
+│   │
+│   ├── export/                  # 📤 Export Données (NOUVEAU)
+│   │   ├── schedule-export-buttons.tsx  # Export ICS + PDF calendrier
+│   │   └── stats-export-buttons.tsx     # Export CSV/JSON/PDF stats
+│   │
+│   ├── teams/                   # Composants équipes
+│   │   └── teams-grid.tsx      # Grille avec pagination (12/page)
+│   │
+│   ├── schedule/                # Composants calendrier
+│   │   └── matches-grid.tsx    # Grille matchs avec pagination (9-12/page)
+│   │
+│   ├── search/                  # Composants recherche
+│   │   ├── search-input.tsx    # Input avec debounce
+│   │   ├── teams-search-grid.tsx    # Résultats équipes (pagination)
+│   │   ├── players-search-grid.tsx  # Résultats joueurs (pagination)
+│   │   └── matches-search-grid.tsx  # Résultats matchs (pagination)
+│   │
+│   ├── settings/                # ⚙️ Composants Settings (NOUVEAU)
+│   │   └── notification-settings.tsx # Gestion notifications PWA
 │   │
 │   ├── loading/
 │   │   └── page-loading.tsx    # Loading component réutilisable
@@ -123,15 +252,22 @@ benhoops/
 │   │   ├── card.tsx
 │   │   ├── badge.tsx
 │   │   ├── tabs.tsx
+│   │   ├── pagination-custom.tsx    # Pagination réutilisable (NOUVEAU)
 │   │   └── ...                 # Accordion, Alert, Dialog, etc.
 │   │
 │   ├── theme-provider.tsx       # Provider dark mode
-│   └── theme-toggle.tsx         # Toggle dark/light
+│   ├── theme-toggle.tsx         # Toggle dark/light
+│   └── update-notifier.tsx      # Notification nouvelle version (NOUVEAU)
 │
 ├── lib/                          # Logique métier
 │   ├── api/
 │   │   ├── sportsdb.ts         # Client API TheSportsDB + cache
-│   │   └── transformers.ts     # Normalisation données API
+│   │   ├── transformers.ts     # Normalisation données API
+│   │   └── standings.ts        # Calcul des classements
+│   │
+│   ├── utils/                   # Utilitaires
+│   │   ├── stats.ts            # Calcul stats avancées (NOUVEAU)
+│   │   └── export.ts           # Export PDF/CSV/ICS (NOUVEAU)
 │   │
 │   ├── types/
 │   │   └── index.ts            # Types TypeScript (Team, Player, Match)
@@ -150,11 +286,16 @@ benhoops/
 │   └── use-toast.ts             # Hook toast notifications
 │
 ├── public/                       # Assets statiques
+│   ├── manifest.json            # PWA manifest (NOUVEAU)
+│   ├── sw.js                    # Service Worker v1.1.0 (NOUVEAU)
+│   ├── icon-192.png             # Icône PWA 192x192
+│   ├── icon-512.png             # Icône PWA 512x512
+│   ├── icon-generator.html      # Générateur d'icônes PWA
 │   ├── grid.svg                 # Background pattern
 │   └── logos/                   # Logos locaux (vide)
 │
 ├── .env.local                    # Variables d'environnement (gitignore)
-├── next.config.js               # Config Next.js
+├── next.config.js               # Config Next.js + cache headers (MODIFIÉ)
 ├── tailwind.config.ts           # Config Tailwind + thème NBA
 ├── tsconfig.json                # Config TypeScript strict
 ├── components.json              # Config shadcn/ui
@@ -165,14 +306,18 @@ benhoops/
 
 ### Stratégie de Rendu (ISR + SSR)
 
-| Page          | Stratégie | Revalidation | Description                            |
-| ------------- | --------- | ------------ | -------------------------------------- |
-| `/`           | ISR       | 5 min        | Homepage avec matchs récents           |
-| `/teams`      | ISR       | 1 heure      | Liste des équipes NBA                  |
-| `/teams/[id]` | ISR       | 1 heure      | Profil équipe (3 équipes pré-générées) |
-| `/schedule`   | ISR       | 1 heure      | Calendrier des matchs                  |
-| `/standings`  | ISR       | 5 min        | Classement mis à jour fréquemment      |
-| `/search`     | Dynamic   | No cache     | Recherche en temps réel                |
+| Page            | Stratégie | Revalidation | Description                                   |
+| --------------- | --------- | ------------ | --------------------------------------------- |
+| `/`             | ISR       | 5 min        | Homepage avec matchs récents + 780 joueurs    |
+| `/teams`        | ISR       | 1 heure      | Liste des 30 équipes (pagination 12/page)     |
+| `/teams/[id]`   | ISR       | 1 heure      | Profil équipe avec joueurs                    |
+| `/schedule`     | ISR       | 1 heure      | Calendrier (pagination 9-12/page, export ICS) |
+| `/standings`    | ISR       | 5 min        | Classement Est/Ouest mis à jour fréquemment   |
+| `/stats`        | ISR       | 1 heure      | Stats avancées + graphiques (export CSV/PDF)  |
+| `/live`         | Dynamic   | No cache     | Matchs live avec auto-refresh 30s             |
+| `/search`       | Dynamic   | No cache     | Recherche temps réel (pagination 12/page)     |
+| `/settings`     | Static    | -            | Page paramètres notifications PWA             |
+| `/matches/[id]` | ISR       | 5 min        | Détail d'un match                             |
 
 **ISR (Incremental Static Regeneration)** :
 
@@ -203,8 +348,8 @@ const apiCache = new Map<string, any>();
 
 | Technologie      | Version | Description                       |
 | ---------------- | ------- | --------------------------------- |
-| **Next.js**      | 13.5.1  | Framework React avec App Router   |
-| **React**        | 18.2.0  | Library UI avec Server Components |
+| **Next.js**      | 14.2.15 | Framework React avec App Router   |
+| **React**        | 18.3.1  | Library UI avec Server Components |
 | **TypeScript**   | 5.2.2   | Typage statique strict            |
 | **Tailwind CSS** | 3.3.3   | Utility-first CSS framework       |
 
@@ -214,7 +359,7 @@ const apiCache = new Map<string, any>();
 | ---------------------------- | ------- | ------------------------------------- |
 | **shadcn/ui**                | Latest  | 40+ composants Radix UI préconfigurés |
 | **Radix UI**                 | Latest  | Primitives UI accessibles             |
-| **Lucide React**             | 0.446   | 446 icônes SVG optimisées             |
+| **Lucide React**             | 0.446.0 | 446+ icônes SVG optimisées            |
 | **next-themes**              | 0.3.0   | Dark mode avec `class` strategy       |
 | **tailwindcss-animate**      | 1.0.7   | Animations Tailwind prédéfinies       |
 | **class-variance-authority** | 0.7.0   | Variants de composants typés          |
@@ -223,24 +368,30 @@ const apiCache = new Map<string, any>();
 
 | Package                 | Version | Description                            |
 | ----------------------- | ------- | -------------------------------------- |
-| **React Hook Form**     | 7.53    | Gestion formulaires performante        |
-| **Zod**                 | 3.23    | Validation de schémas TypeScript-first |
-| **@hookform/resolvers** | 3.9     | Intégration Zod + React Hook Form      |
+| **React Hook Form**     | 7.53.0  | Gestion formulaires performante        |
+| **Zod**                 | 3.23.8  | Validation de schémas TypeScript-first |
+| **@hookform/resolvers** | 3.9.0   | Intégration Zod + React Hook Form      |
 
-### Utilities
+### Charts & Export
+
+| Package             | Version | Description                          |
+| ------------------- | ------- | ------------------------------------ |
+| **Recharts**        | 2.12.7  | Graphiques React pour stats avancées |
+| **jsPDF**           | 3.0.3   | Génération de PDF                    |
+| **jsPDF-AutoTable** | 5.0.2   | Tableaux pour PDF                    |
+| **ics**             | 3.8.1   | Export calendrier iCalendar          |
+
+### Utilities & Other
 
 | Package            | Version | Description                           |
 | ------------------ | ------- | ------------------------------------- |
-| **date-fns**       | 3.6     | Manipulation de dates                 |
-| **clsx**           | 2.1     | Conditional classNames                |
-| **tailwind-merge** | 2.5     | Merge Tailwind classes intelligemment |
-
-### Charts & Visualization
-
-| Package            | Version | Description                   |
-| ------------------ | ------- | ----------------------------- |
-| **Recharts**       | 2.12    | Graphiques React pour stats   |
-| **Embla Carousel** | 8.3     | Carrousel pour images équipes |
+| **date-fns**       | 3.6.0   | Manipulation de dates                 |
+| **clsx**           | 2.1.1   | Conditional classNames                |
+| **tailwind-merge** | 2.5.2   | Merge Tailwind classes intelligemment |
+| **Embla Carousel** | 8.3.0   | Carrousel pour images équipes         |
+| **Sonner**         | 1.5.0   | Toast notifications modernes          |
+| **Vaul**           | 0.9.9   | Drawer mobile                         |
+| **cmdk**           | 1.0.0   | Command palette                       |
 
 ## 🎨 Design System
 
@@ -270,7 +421,7 @@ colors: {
 - **Dark Mode** : Fond `#0A0A0A`, texte blanc
 - Transition automatique via `next-themes`
 
-## 🔧 Configuration Avancée
+## � API TheSportsDB
 
 ### Variables d'Environnement
 
@@ -304,6 +455,9 @@ NEXT_PUBLIC_SPORTSDB_API_KEY=3
 
 # Base URL API
 NEXT_PUBLIC_SPORTSDB_BASE_URL=https://www.thesportsdb.com/api/v1/json
+
+# URL de l'application
+NEXT_PUBLIC_BASE_URL=https://benhoops.vercel.app
 
 # Pour upgrade Patreon (optionnel)
 # NEXT_PUBLIC_SPORTSDB_API_KEY=votre_cle_patreon
@@ -406,155 +560,41 @@ SportsDBEvent → Match {
 }
 ```
 
-## 🚢 Déploiement
-
-### Vercel (Recommandé)
-
-1. **Push vers GitHub**
-
-```bash
-git add .
-git commit -m "Initial commit"
-git push origin main
-```
-
-2. **Importer sur Vercel**
-
-- Aller sur [vercel.com](https://vercel.com)
-- Cliquer "Import Project"
-- Sélectionner le repo GitHub
-- Vercel détecte automatiquement Next.js ✅
-
-3. **Variables d'environnement** (optionnel)
-
-- Settings → Environment Variables
-- Ajouter `NEXT_PUBLIC_SPORTSDB_API_KEY` si clé Patreon
-
-4. **Deploy** 🚀
-
-- Vercel build et déploie automatiquement
-- URL : `https://benhoops.vercel.app`
-
-### Build Local
-
-```bash
-# Build pour production
-npm run build
-
-# Tester le build localement
-npm run start
-
-# Build output dans .next/
-```
-
-**Optimisations Build** :
-
-- ✅ Images optimisées (WebP)
-- ✅ Code splitting automatique
-- ✅ Tree shaking
-- ✅ Minification CSS/JS
-- ✅ Cache statique agressif
-
-## 🧪 Développement
-
-### Structure des Composants
-
-**Server Components** (par défaut):
-
-```typescript
-// app/teams/page.tsx
-export default async function TeamsPage() {
-  const teams = await getNBATeams(); // Fetch côté serveur
-  return <div>{/* ... */}</div>;
-}
-```
-
-**Client Components** (interactivité):
-
-```typescript
-// components/search/search-input.tsx
-'use client';
-
-export function SearchInput() {
-  const [query, setQuery] = useState('');
-  // ... debounce, router.push, etc.
-}
-```
-
-### Ajouter un Composant shadcn/ui
-
-```bash
-npx shadcn-ui@latest add dialog
-# Ajoute components/ui/dialog.tsx
-
-# Utilisation
-import { Dialog } from '@/components/ui/dialog';
-```
-
-### Créer une Nouvelle Page
-
-1. **Créer le fichier**
-
-```typescript
-// app/players/page.tsx
-export default async function PlayersPage() {
-  return <div>Liste des joueurs</div>;
-}
-```
-
-2. **Ajouter au menu**
-
-```typescript
-// components/navigation/navbar.tsx
-const navLinks = [
-  // ...
-  { href: '/players', label: 'Joueurs' },
-];
-```
-
-### Debugging
-
-**Logs serveur** :
-
-```typescript
-// lib/api/sportsdb.ts
-console.log('📦 [CACHE HIT]:', endpoint);
-console.log('💾 [CACHE SET]:', endpoint);
-console.log('❌ [ERROR]:', error);
-```
-
-**Outils** :
-
-- Next.js devtools (automatique en dev)
-- React DevTools (extension Chrome)
-- TypeScript errors dans VS Code
-
 ## 🎯 Roadmap
 
 ### Fonctionnalités Actuelles ✅
 
-- [x] Liste des équipes NBA disponibles
-- [x] Profils équipes avec logo, stats, stade
-- [x] Calendrier matchs (passés + à venir)
-- [x] Classement Conférence Est/Ouest
-- [x] Recherche équipes, joueurs, matchs
-- [x] Dark mode
+- [x] Liste des 30 équipes NBA avec pagination (12/page)
+- [x] Profils équipes avec logo, stats, stade, joueurs
+- [x] Calendrier matchs avec pagination (9-12/page) et export (.ics, PDF)
+- [x] Classement Conférence Est/Ouest avec stats détaillées
+- [x] Recherche équipes, joueurs (780+), matchs avec pagination (12/page)
+- [x] **Stats avancées** - Graphiques interactifs (Recharts)
+- [x] **Mode live** - Auto-refresh 30s pour matchs en cours
+- [x] **PWA complet** - Notifications push, mode offline, installable
+- [x] **Export de données** - CSV, JSON, PDF, iCalendar (.ics)
+- [x] **Pagination intelligente** - Toutes les listes paginées
+- [x] **Cache management** - Service Worker v1.1.0 + headers intelligents
+- [x] **Auto-update** - Notification des nouvelles versions
+- [x] Dark mode avec transition fluide
 - [x] Loading states + error boundaries
 - [x] ISR + cache mémoire optimisé
 - [x] Responsive design mobile-first
 - [x] SEO metadata complet
+- [x] 780+ joueurs NBA disponibles
 
 ### À Venir 🔜
 
-- [ ] Stats joueurs individuelles
-- [ ] Comparaison équipes (head-to-head)
-- [ ] Favoris localStorage
-- [ ] Notifications matchs live (PWA)
-- [ ] Graphiques stats avancées
-- [ ] Filtres avancés (conférence, division)
-- [ ] Internationalisation (EN/FR)
-- [ ] Tests unitaires (Jest + React Testing Library)
-- [ ] Tests E2E (Playwright)
+- [ ] **Analytics** - Suivi des performances d'équipes sur la saison
+- [ ] **Prédictions** - IA pour prédire résultats de matchs
+- [ ] **Favoris** - Sauvegarder équipes/joueurs favoris (localStorage)
+- [ ] **Notifications intelligentes** - Alertes personnalisées par équipe
+- [ ] **Comparaison multi-équipes** - Comparer 3+ équipes simultanément
+- [ ] **Filtres avancés** - Par conférence, division, période
+- [ ] **Internationalisation** - Support EN/FR/ES
+- [ ] **Tests** - Tests unitaires (Jest) + E2E (Playwright)
+- [ ] **Optimisation mobile** - PWA avancée avec background sync
+- [ ] **API custom** - Backend propre pour données augmentées
 
 ## 🤝 Contribution
 
@@ -588,53 +628,7 @@ lib/           → Logique métier + API
 data/          → Données statiques
 ```
 
-## 📝 Troubleshooting
-
-### Erreur 429 (Too Many Requests)
-
-**Symptôme** : Build échoue avec erreur API
-
-**Solution** :
-
-```typescript
-// lib/api/sportsdb.ts
-// ✅ Déjà implémenté :
-// - Cache mémoire (évite doublons)
-// - Délai 500ms entre requêtes
-// - Retry automatique (max 2)
-```
-
-### Build Lent
-
-**Solution** : Réduire le nombre de pages pré-générées
-
-```typescript
-// app/teams/[id]/page.tsx
-export async function generateStaticParams() {
-  return [
-    { id: '134870' }, // Lakers
-    { id: '134871' }, // Warriors
-    { id: '134872' }, // Celtics
-  ]; // Seulement 3 au lieu de 30
-}
-```
-
-### Images Cassées
-
-**Symptôme** : Logos équipes ne s'affichent pas
-
-**Solution** : Vérifier `next.config.js`
-
-```javascript
-images: {
-  remotePatterns: [
-    {
-      protocol: 'https',
-      hostname: 'www.thesportsdb.com',
-    },
-  ],
-}
-```
+---
 
 ## 📚 Ressources
 
@@ -650,4 +644,10 @@ MIT License - Voir [LICENSE](LICENSE)
 
 ---
 
+<div align="center">
+
 **Fait avec 🏀 par [Obed67](https://github.com/Obed67)**
+
+[🌐 Demo Live](https://benhoops.vercel.app) • [📖 Documentation](https://github.com/Obed67/benhoops) • [🐛 Report Bug](https://github.com/Obed67/benhoops/issues)
+
+</div>
