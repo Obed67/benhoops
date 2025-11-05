@@ -54,7 +54,11 @@ export function UpdateNotifier() {
               Une nouvelle version de BenHoops est disponible.
             </p>
             <div className="mt-3 flex gap-2">
-              <Button size="sm" onClick={handleUpdate} className="bg-orange-600 hover:bg-orange-700">
+              <Button
+                size="sm"
+                onClick={handleUpdate}
+                className="bg-orange-600 hover:bg-orange-700"
+              >
                 Mettre à jour
               </Button>
               <Button size="sm" variant="outline" onClick={() => setShowUpdate(false)}>

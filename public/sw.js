@@ -37,7 +37,7 @@ self.addEventListener('activate', (event) => {
   );
   // Prendre le contrôle de tous les clients immédiatement
   self.clients.claim();
-  
+
   // Notifier tous les clients qu'une nouvelle version est active
   self.clients.matchAll().then((clients) => {
     clients.forEach((client) => {
