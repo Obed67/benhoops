@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Retirer 'output: export' pour utiliser ISR au lieu d'export statique complet
-  // Cela permet de générer les pages à la demande et éviter les erreurs 429
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true, // Ok pour ne pas bloquer le déploiement sur erreurs ESLint
   },
+
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -14,26 +13,37 @@ const nextConfig = {
       },
     ],
   },
-  // Headers pour gérer le cache intelligemment
+
+  // ✅ Headers pour contrôle intelligent du cache
   async headers() {
     return [
       {
-        // Pour tous les fichiers JS/CSS avec hash (ex: 864-70482cadf61852bb.js)
+        // 🧩 Fichiers statiques compilés avec hash (Next.js les versionne automatiquement)
         source: '/_next/static/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable', // Cache 1 an (car hash change)
+            value: 'public, max-age=31536000, immutable', // OK : cache long car nom change si fichier change
           },
         ],
       },
       {
-        // Pour les pages HTML - toujours vérifier si nouvelle version
+        // 🧠 Pages dynamiques ou statiques HTML — forcer vérification
         source: '/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=0, must-revalidate', // Toujours vérifier
+            value: 'no-cache, no-store, must-revalidate', // 🔥 plus sûr que public,max-age=0
+          },
+        ],
+      },
+      {
+        // 📦 API routes : léger cache possible si tu veux
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 's-maxage=60, stale-while-revalidate=30', // ISR côté Vercel (si applicable)
           },
         ],
       },
