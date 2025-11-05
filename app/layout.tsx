@@ -27,6 +27,7 @@ export const metadata: Metadata = {
     'BenHoops',
   ],
   authors: [{ name: 'BenHoops' }],
+  manifest: '/manifest.json',
   openGraph: {
     title: 'BenHoops - NBA Stats & Live Scores',
     description: 'Suivez la NBA en direct avec BenHoops. Scores, classements et statistiques.',
@@ -38,6 +39,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#f97316" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
+      </head>
       <body className={`${inter.variable} ${bebasNeue.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
@@ -51,6 +57,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Footer />
           </div>
         </ThemeProvider>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(
+                    function(registration) {
+                      console.log('SW registered: ', registration);
+                    },
+                    function(err) {
+                      console.log('SW registration failed: ', err);
+                    }
+                  );
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

@@ -11,7 +11,10 @@ const navLinks = [
   { href: '/', label: 'Accueil' },
   { href: '/teams', label: 'Équipes' },
   { href: '/schedule', label: 'Calendrier' },
+  { href: '/live', label: 'Live' },
   { href: '/standings', label: 'Classement' },
+  { href: '/stats', label: 'Statistiques' },
+  { href: '/settings', label: 'Paramètres' },
 ];
 
 export function Navbar() {

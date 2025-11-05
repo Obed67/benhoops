@@ -3,6 +3,7 @@ import {
   SportsDBTeamsResponse,
   SportsDBPlayersResponse,
   SportsDBEventsResponse,
+  SportsDBEvent,
   Team,
   Player,
   Match,
@@ -155,6 +156,31 @@ export async function getNBATeams(): Promise<Team[]> {
 
 // Alias pour compatibilité
 export const getBALTeams = getNBATeams;
+
+/**
+ * Récupérer un match par son ID
+ */
+export async function getMatchById(matchId: string): Promise<Match | null> {
+  try {
+    const endpoint = `lookupevent.php?id=${matchId}`;
+
+    const data = await fetchFromAPI<{ events: SportsDBEvent[] }>(endpoint, {
+      revalidate: 0, // Pas de cache pour les matchs live
+      useMemoryCache: false,
+    });
+
+    if (!data || !data.events || data.events.length === 0) {
+      console.warn(`❌ [getMatchById] Match ${matchId} non trouvé`);
+      return null;
+    }
+
+    const match = normalizeMatch(data.events[0]);
+    return match;
+  } catch (error) {
+    console.error(`❌ [getMatchById] Error fetching match ${matchId}:`, error);
+    return null;
+  }
+}
 
 /**
  * Récupère une équipe spécifique par son ID

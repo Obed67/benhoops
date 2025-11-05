@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { getAllNBAMatches } from '@/lib/api/sportsdb';
 import { MatchCard } from '@/components/cards/match-card';
+import { ScheduleExportButtons } from '@/components/export/schedule-export-buttons';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export const metadata: Metadata = {
@@ -21,12 +22,15 @@ export default async function SchedulePage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mb-12 text-center">
-        <h1
-          className="mb-4 text-5xl font-bold md:text-6xl"
-          style={{ fontFamily: 'var(--font-bebas)' }}
-        >
-          Calendrier des Matchs
-        </h1>
+        <div className="flex items-center justify-center gap-4 mb-4 flex-wrap">
+          <h1
+            className="text-5xl font-bold md:text-6xl"
+            style={{ fontFamily: 'var(--font-bebas)' }}
+          >
+            Calendrier des Matchs
+          </h1>
+          <ScheduleExportButtons matches={matches} />
+        </div>
         <p className="text-xl text-muted-foreground">Suivez tous les matchs de la saison</p>
       </div>
 
