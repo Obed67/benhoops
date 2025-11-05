@@ -3,8 +3,7 @@ import { getNBATeams, getAllNBAMatches } from '@/lib/api/sportsdb';
 import { TeamCard } from '@/components/cards/team-card';
 import { MatchCard } from '@/components/cards/match-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { SearchInput } from '@/components/search/search-input';
 import { Team, Match } from '@/lib/types';
 
 export const metadata: Metadata = {
@@ -63,15 +62,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       </div>
 
       <div className="mx-auto mb-8 max-w-2xl">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Rechercher une équipe ou un match..."
-            className="pl-10"
-            defaultValue={query}
-          />
-        </div>
+        <SearchInput />
         {query && (
           <p className="mt-2 text-center text-sm text-muted-foreground">
             {totalResults} {totalResults === 1 ? 'résultat trouvé' : 'résultats trouvés'}
