@@ -16,7 +16,7 @@ export function Footer() {
                 <div className="relative text-3xl">🏀</div>
               </div>
               <span className="text-lg font-black bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 dark:from-orange-500 dark:via-red-500 dark:to-orange-500 bg-clip-text text-transparent">
-                NBA Stats
+                BenHoops
               </span>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -149,10 +149,8 @@ export function Footer() {
         <div className="mt-8 border-t border-orange-200/30 dark:border-orange-900/30 pt-8 text-center">
           <p className="text-sm text-muted-foreground">
             &copy; {currentYear}{' '}
-            <span className="font-semibold text-orange-600 dark:text-orange-500">
-              NBA Stats Hub
-            </span>
-            . Tous droits réservés.
+            <span className="font-semibold text-orange-600 dark:text-orange-500">BenHoops</span>.
+            Tous droits réservés.
           </p>
         </div>
       </div>

@@ -13,9 +13,9 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: 'NBA Stats & Scores - Live Basketball',
+  title: 'BenHoops - NBA Stats & Live Scores',
   description:
-    'Suivez la NBA en direct. Résultats, classements, statistiques et actualités des 30 équipes NBA. Scores en temps réel et calendrier complet.',
+    'Suivez la NBA en direct avec BenHoops. Résultats, classements, statistiques et actualités des 30 équipes NBA. Scores en temps réel et calendrier complet.',
   keywords: [
     'NBA',
     'basketball',
@@ -24,11 +24,12 @@ export const metadata: Metadata = {
     'NBA stats',
     'NBA standings',
     'basketball scores',
+    'BenHoops',
   ],
-  authors: [{ name: 'NBA Stats Hub' }],
+  authors: [{ name: 'BenHoops' }],
   openGraph: {
-    title: 'NBA Stats & Scores - Live Basketball',
-    description: 'Suivez la NBA en direct avec scores, classements et statistiques',
+    title: 'BenHoops - NBA Stats & Live Scores',
+    description: 'Suivez la NBA en direct avec BenHoops. Scores, classements et statistiques.',
     type: 'website',
     locale: 'fr_FR',
   },

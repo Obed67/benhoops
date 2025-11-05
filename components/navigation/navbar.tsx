@@ -31,7 +31,7 @@ export function Navbar() {
               </div>
             </div>
             <span className="text-xl font-black tracking-tight bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 dark:from-orange-500 dark:via-red-500 dark:to-orange-500 bg-clip-text text-transparent">
-              NBA Stats
+              BenHoops
             </span>
           </Link>
 

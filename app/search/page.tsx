@@ -8,7 +8,7 @@ import { SearchInput } from '@/components/search/search-input';
 import { Team, Match, Player } from '@/lib/types';
 
 export const metadata: Metadata = {
-  title: 'Recherche - NBA Stats',
+  title: 'Recherche - BenHoops',
   description: 'Recherchez des équipes, joueurs et matchs NBA.',
 };
 
