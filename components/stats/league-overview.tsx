@@ -45,7 +45,11 @@ export function LeagueOverview({ leagueStats, topTeams, bottomTeams }: Props) {
   }));
 
   return (
-    <AnimatedGrid variant="cascade" stagger={0.15} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <AnimatedGrid
+      variant="cascade"
+      stagger={0.15}
+      className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+    >
       {/* Top Scorers */}
       <Card>
         <CardHeader>

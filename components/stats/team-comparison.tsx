@@ -192,38 +192,38 @@ export function TeamComparison({ teams, matches, teamStats }: Props) {
       {stats1 && stats2 && (
         <AnimatedSection animation="fadeUp" delay={0.3}>
           <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5" />
-              Comparaison Radar
-            </CardTitle>
-            <CardDescription>Vue globale des performances</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={400}>
-              <RadarChart data={radarData}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="category" />
-                <PolarRadiusAxis domain={[0, 100]} />
-                <Radar
-                  name={team1?.name}
-                  dataKey={team1?.name || 'Team 1'}
-                  stroke="#f97316"
-                  fill="#f97316"
-                  fillOpacity={0.6}
-                />
-                <Radar
-                  name={team2?.name}
-                  dataKey={team2?.name || 'Team 2'}
-                  stroke="#dc2626"
-                  fill="#dc2626"
-                  fillOpacity={0.6}
-                />
-                <Legend />
-              </RadarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Comparaison Radar
+              </CardTitle>
+              <CardDescription>Vue globale des performances</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={400}>
+                <RadarChart data={radarData}>
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="category" />
+                  <PolarRadiusAxis domain={[0, 100]} />
+                  <Radar
+                    name={team1?.name}
+                    dataKey={team1?.name || 'Team 1'}
+                    stroke="#f97316"
+                    fill="#f97316"
+                    fillOpacity={0.6}
+                  />
+                  <Radar
+                    name={team2?.name}
+                    dataKey={team2?.name || 'Team 2'}
+                    stroke="#dc2626"
+                    fill="#dc2626"
+                    fillOpacity={0.6}
+                  />
+                  <Legend />
+                </RadarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
         </AnimatedSection>
       )}
 
@@ -231,57 +231,57 @@ export function TeamComparison({ teams, matches, teamStats }: Props) {
       {stats1 && stats2 && (
         <AnimatedSection animation="fadeLeft" delay={0.4}>
           <Card>
-          <CardHeader>
-            <CardTitle>Statistiques Détaillées</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="font-semibold">{team1?.name}</div>
-                <div className="text-muted-foreground">Statistique</div>
-                <div className="font-semibold">{team2?.name}</div>
-              </div>
-
-              {[
-                { label: 'Matchs joués', val1: stats1.played, val2: stats2.played },
-                { label: 'Victoires', val1: stats1.wins, val2: stats2.wins },
-                { label: 'Défaites', val1: stats1.losses, val2: stats2.losses },
-                {
-                  label: 'Taux de victoire',
-                  val1: `${stats1.winRate.toFixed(1)}%`,
-                  val2: `${stats2.winRate.toFixed(1)}%`,
-                },
-                {
-                  label: 'Pts marqués (moy)',
-                  val1: stats1.averagePointsScored.toFixed(1),
-                  val2: stats2.averagePointsScored.toFixed(1),
-                },
-                {
-                  label: 'Pts encaissés (moy)',
-                  val1: stats1.averagePointsConceded.toFixed(1),
-                  val2: stats2.averagePointsConceded.toFixed(1),
-                },
-                {
-                  label: 'Différence',
-                  val1:
-                    stats1.pointsDifference > 0
-                      ? `+${stats1.pointsDifference}`
-                      : stats1.pointsDifference,
-                  val2:
-                    stats2.pointsDifference > 0
-                      ? `+${stats2.pointsDifference}`
-                      : stats2.pointsDifference,
-                },
-              ].map((stat, idx) => (
-                <div key={idx} className="grid grid-cols-3 gap-4 py-2 border-b text-center">
-                  <div className="font-mono">{stat.val1}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
-                  <div className="font-mono">{stat.val2}</div>
+            <CardHeader>
+              <CardTitle>Statistiques Détaillées</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div className="font-semibold">{team1?.name}</div>
+                  <div className="text-muted-foreground">Statistique</div>
+                  <div className="font-semibold">{team2?.name}</div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+
+                {[
+                  { label: 'Matchs joués', val1: stats1.played, val2: stats2.played },
+                  { label: 'Victoires', val1: stats1.wins, val2: stats2.wins },
+                  { label: 'Défaites', val1: stats1.losses, val2: stats2.losses },
+                  {
+                    label: 'Taux de victoire',
+                    val1: `${stats1.winRate.toFixed(1)}%`,
+                    val2: `${stats2.winRate.toFixed(1)}%`,
+                  },
+                  {
+                    label: 'Pts marqués (moy)',
+                    val1: stats1.averagePointsScored.toFixed(1),
+                    val2: stats2.averagePointsScored.toFixed(1),
+                  },
+                  {
+                    label: 'Pts encaissés (moy)',
+                    val1: stats1.averagePointsConceded.toFixed(1),
+                    val2: stats2.averagePointsConceded.toFixed(1),
+                  },
+                  {
+                    label: 'Différence',
+                    val1:
+                      stats1.pointsDifference > 0
+                        ? `+${stats1.pointsDifference}`
+                        : stats1.pointsDifference,
+                    val2:
+                      stats2.pointsDifference > 0
+                        ? `+${stats2.pointsDifference}`
+                        : stats2.pointsDifference,
+                  },
+                ].map((stat, idx) => (
+                  <div key={idx} className="grid grid-cols-3 gap-4 py-2 border-b text-center">
+                    <div className="font-mono">{stat.val1}</div>
+                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                    <div className="font-mono">{stat.val2}</div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </AnimatedSection>
       )}
 
@@ -289,57 +289,59 @@ export function TeamComparison({ teams, matches, teamStats }: Props) {
       {h2h && h2h.totalMatches > 0 && (
         <AnimatedSection animation="fadeRight" delay={0.5}>
           <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Trophy className="h-5 w-5 text-orange-600" />
-              Face à Face
-            </CardTitle>
-            <CardDescription>{h2h.totalMatches} confrontations</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={h2hChartData}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey={team1?.name || 'Team 1'} fill="#f97316" />
-                <Bar dataKey={team2?.name || 'Team 2'} fill="#dc2626" />
-              </BarChart>
-            </ResponsiveContainer>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-orange-600" />
+                Face à Face
+              </CardTitle>
+              <CardDescription>{h2h.totalMatches} confrontations</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={h2hChartData}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey={team1?.name || 'Team 1'} fill="#f97316" />
+                  <Bar dataKey={team2?.name || 'Team 2'} fill="#dc2626" />
+                </BarChart>
+              </ResponsiveContainer>
 
-            {h2h.lastMeetings.length > 0 && (
-              <div>
-                <h4 className="font-semibold mb-3">Derniers matchs</h4>
-                <div className="space-y-2">
-                  {h2h.lastMeetings.map((meeting, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-                    >
-                      <span className="text-sm">
-                        {new Date(meeting.date).toLocaleDateString('fr-FR')}
-                      </span>
-                      <div className="flex items-center gap-2 font-mono">
-                        <span
-                          className={meeting.winner === 'Team 1' ? 'font-bold text-orange-600' : ''}
-                        >
-                          {meeting.team1Score}
+              {h2h.lastMeetings.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-3">Derniers matchs</h4>
+                  <div className="space-y-2">
+                    {h2h.lastMeetings.map((meeting, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                      >
+                        <span className="text-sm">
+                          {new Date(meeting.date).toLocaleDateString('fr-FR')}
                         </span>
-                        <span className="text-muted-foreground">-</span>
-                        <span
-                          className={meeting.winner === 'Team 2' ? 'font-bold text-red-600' : ''}
-                        >
-                          {meeting.team2Score}
-                        </span>
+                        <div className="flex items-center gap-2 font-mono">
+                          <span
+                            className={
+                              meeting.winner === 'Team 1' ? 'font-bold text-orange-600' : ''
+                            }
+                          >
+                            {meeting.team1Score}
+                          </span>
+                          <span className="text-muted-foreground">-</span>
+                          <span
+                            className={meeting.winner === 'Team 2' ? 'font-bold text-red-600' : ''}
+                          >
+                            {meeting.team2Score}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              )}
+            </CardContent>
+          </Card>
         </AnimatedSection>
       )}
     </div>
