@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TeamCard } from '@/components/cards/team-card';
 import { Pagination } from '@/components/ui/pagination-custom';
+import { AnimatedGrid } from '@/components/animated-components';
 import type { Team } from '@/lib/types';
 
 interface TeamsGridProps {
@@ -12,6 +13,7 @@ interface TeamsGridProps {
 
 export function TeamsGrid({ teams, itemsPerPage = 12 }: TeamsGridProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [gridKey, setGridKey] = useState(0);
 
   const totalPages = Math.ceil(teams.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -20,17 +22,24 @@ export function TeamsGrid({ teams, itemsPerPage = 12 }: TeamsGridProps) {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    setGridKey((prev) => prev + 1); // Force re-animation sur changement de page
     // Scroll vers le haut quand on change de page
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {/* Grid animée avec variant 'magnetic' pour un effet spectaculaire */}
+      <AnimatedGrid
+        key={gridKey}
+        variant="cascade"
+        stagger={0.08}
+        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+      >
         {currentTeams.map((team) => (
           <TeamCard key={team.id} team={team} />
         ))}
-      </div>
+      </AnimatedGrid>
 
       {totalPages > 1 && (
         <>
