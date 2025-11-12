@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true, // Ok pour ne pas bloquer le déploiement sur erreurs ESLint
-  },
-
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -13,6 +9,9 @@ const nextConfig = {
       },
     ],
   },
+
+  // Déclarer gsap comme package externe pour éviter les erreurs RSC
+  serverExternalPackages: ['gsap'],
 
   // ✅ Headers pour contrôle intelligent du cache
   async headers() {

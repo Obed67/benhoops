@@ -22,9 +22,9 @@ import {
 } from 'lucide-react';
 
 interface MatchPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 // Limiter le nombre de pages statiques générées pour éviter l'erreur 429
@@ -55,8 +55,9 @@ export const revalidate = 3600;
 export const dynamicParams = true;
 
 export async function generateMetadata({ params }: MatchPageProps): Promise<Metadata> {
+  const { id } = await params;
   const matches = await getAllNBAMatches();
-  const match = matches.find((m) => m.id === params.id);
+  const match = matches.find((m) => m.id === id);
 
   if (!match) {
     return {
@@ -71,8 +72,9 @@ export async function generateMetadata({ params }: MatchPageProps): Promise<Meta
 }
 
 export default async function MatchPage({ params }: MatchPageProps) {
+  const { id } = await params;
   const matches = await getAllNBAMatches();
-  const match = matches.find((m) => m.id === params.id);
+  const match = matches.find((m) => m.id === id);
 
   if (!match) {
     notFound();

@@ -219,7 +219,8 @@ export async function getPlayersByTeam(teamId: string): Promise<Player[]> {
       }
     );
 
-    if (!data.player || data.player.length === 0) {
+    // Vérifier que data.player existe ET est un tableau
+    if (!data.player || !Array.isArray(data.player) || data.player.length === 0) {
       console.warn(`Aucun joueur trouvé pour l'équipe ${teamId}`);
       return [];
     }

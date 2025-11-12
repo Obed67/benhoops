@@ -11,14 +11,15 @@ import { ExpandableText } from '@/components/ui/expandable-text';
 import { MapPin, Users, Trophy, Calendar, ArrowLeft } from 'lucide-react';
 
 interface TeamPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 // generateMetadata pour SEO dynamique
 export async function generateMetadata({ params }: TeamPageProps): Promise<Metadata> {
-  const team = await getTeamById(params.id);
+  const { id } = await params;
+  const team = await getTeamById(id);
 
   if (!team) {
     return {
@@ -58,11 +59,14 @@ export async function generateStaticParams() {
 export const dynamicParams = true;
 
 export default async function TeamPage({ params }: TeamPageProps) {
+  // Attendre les params (Next.js 15+)
+  const { id } = await params;
+
   // Fetch parallèle pour optimiser les performances
   const [team, teamPlayers, teamMatches] = await Promise.all([
-    getTeamById(params.id),
-    getPlayersByTeam(params.id),
-    getTeamMatches(params.id),
+    getTeamById(id),
+    getPlayersByTeam(id),
+    getTeamMatches(id),
   ]);
 
   if (!team) {
