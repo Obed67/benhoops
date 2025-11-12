@@ -28,11 +28,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const query = searchParams.q?.toLowerCase() || '';
 
   // Charger seulement les données nécessaires pour éviter les timeouts au build
-  const [teams, matches] = await Promise.all([
-    getNBATeams(),
-    getAllNBAMatches(),
-  ]);
-  
+  const [teams, matches] = await Promise.all([getNBATeams(), getAllNBAMatches()]);
+
   // Les joueurs ne sont chargés que si nécessaire (évite timeout au build)
   const players: Player[] = [];
 

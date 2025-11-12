@@ -273,7 +273,7 @@ export async function getPlayersByTeam(teamId: string): Promise<Player[]> {
       return players;
     } catch (fetchError: any) {
       clearTimeout(timeoutId);
-      
+
       if (fetchError.name === 'AbortError') {
         console.warn(`⏱️  Timeout lors de la récupération des joueurs pour l'équipe ${nbaTeamId}`);
       } else {

@@ -12,10 +12,7 @@ export const revalidate = 300;
 
 export default async function Home() {
   // Fetch parallèle avec ISR - pas besoin de tous les joueurs sur la page d'accueil
-  const [matches, teams] = await Promise.all([
-    getAllNBAMatches(),
-    getNBATeams(),
-  ]);
+  const [matches, teams] = await Promise.all([getAllNBAMatches(), getNBATeams()]);
 
   const recentMatches = matches.filter((m) => m.status === 'finished').slice(0, 3);
   const upcomingMatches = matches.filter((m) => m.status === 'scheduled').slice(0, 3);
