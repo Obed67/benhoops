@@ -2,7 +2,6 @@
 
 > Document technique détaillant les défis rencontrés, les optimisations implémentées et les axes d'amélioration futurs du projet BenHoops.
 
-
 ## 🚧 Défis Techniques Rencontrés
 
 ### 1. **Limitations de l'API Gratuite TheSportsDB**
@@ -135,6 +134,7 @@ export function UpdateNotifier() {
   }, []);
 }
 ```
+
 ---
 
 ### 3. **Stratégie ISR (Incremental Static Regeneration)**
@@ -308,11 +308,21 @@ export function exportToICS(matches: Match[]) {
 
 **Limitation actuelle** :
 
-- Dépendance totale à TheSportsDB API
-- TheSportsDB API gratuit est très limitée
+- Dépendance à TheSportsDB API (équipes, matchs, classements)
+- Utilisation de l'API ESPN pour les rosters de joueurs (gratuite, fonctionne sur Vercel)
 - Pas de données augmentées (favoris, notes, etc.)
 - Pas de features sociales
 
+**Migration API Joueurs** :
+
+**Problème initial** : TheSportsDB retournait des joueurs de football (Arsenal FC) au lieu de joueurs NBA
+
+**Solution** : Migration vers ESPN API
+
+- ✅ API gratuite, sans clé requise
+- ✅ Fonctionne parfaitement sur Vercel (pas de blocage)
+- ✅ Données NBA officielles avec photos haute qualité
+- ✅ Endpoint : `https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/{slug}/roster`
 
 **Nouvelles Features Possibles** :
 
@@ -324,7 +334,6 @@ export function exportToICS(matches: Match[]) {
 
 ---
 
-
 ### 3. **Internationalisation (i18n)** (Priorité Basse)
 
 **Langues Cibles** :
@@ -335,6 +344,6 @@ export function exportToICS(matches: Match[]) {
 
 ---
 
-**Document rédigé le 5 novembre 2025**  
+**Document rédigé le 12 novembre 2025**  
 **Contact** : [GitHub - Obed67](https://github.com/Obed67)  
 **Projet** : [BenHoops Live Demo](https://benhoops.vercel.app)

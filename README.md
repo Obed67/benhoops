@@ -433,19 +433,36 @@ colors: {
 - **Dark Mode** : Fond `#0A0A0A`, texte blanc
 - Transition automatique via `next-themes`
 
-## 📊 API TheSportsDB
+## 📊 APIs Utilisées
 
-### Endpoints Utilisés
+### TheSportsDB API
 
-| Endpoint                 | Description             | Params               | Utilisé Pour           |
-| ------------------------ | ----------------------- | -------------------- | ---------------------- |
-| `search_all_teams.php`   | Liste équipes par ligue | `l=NBA`              | Page `/teams`          |
-| `lookupteam.php`         | Détails d'une équipe    | `id={teamId}`        | Page `/teams/[id]`     |
-| `lookup_all_players.php` | Joueurs d'une équipe    | `id={teamId}`        | Profil équipe + Search |
-| `eventsnext.php`         | Prochains matchs (5)    | `id={teamId}`        | Page `/schedule`       |
-| `eventslast.php`         | Derniers matchs (5)     | `id={teamId}`        | Homepage + Schedule    |
-| `eventspastleague.php`   | Matchs passés ligue     | `id=4387` (NBA)      | Calendrier             |
-| `lookuptable.php`        | Classement ligue        | `l=4387&s=2024-2025` | Page `/standings`      |
+**Endpoints Utilisés** :
+
+| Endpoint               | Description             | Params               | Utilisé Pour        |
+| ---------------------- | ----------------------- | -------------------- | ------------------- |
+| `search_all_teams.php` | Liste équipes par ligue | `l=NBA`              | Page `/teams`       |
+| `lookupteam.php`       | Détails d'une équipe    | `id={teamId}`        | Page `/teams/[id]`  |
+| `eventsnext.php`       | Prochains matchs (5)    | `id={teamId}`        | Page `/schedule`    |
+| `eventslast.php`       | Derniers matchs (5)     | `id={teamId}`        | Homepage + Schedule |
+| `eventspastleague.php` | Matchs passés ligue     | `id=4387` (NBA)      | Calendrier          |
+| `lookuptable.php`      | Classement ligue        | `l=4387&s=2024-2025` | Page `/standings`   |
+
+### ESPN API
+
+**Endpoints Utilisés** :
+
+| Endpoint               | Description          | Params     | Utilisé Pour           |
+| ---------------------- | -------------------- | ---------- | ---------------------- |
+| `/teams/{slug}/roster` | Joueurs d'une équipe | `slug=sac` | Profil équipe + Search |
+
+**Avantages ESPN API** :
+
+- ✅ Gratuite, sans clé requise
+- ✅ Fonctionne parfaitement sur Vercel
+- ✅ Données NBA officielles et à jour
+- ✅ Photos de joueurs de haute qualité
+- ✅ Statistiques complètes (taille, poids, âge, college)
 
 ### Limitations API Gratuite
 
