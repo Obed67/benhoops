@@ -217,72 +217,99 @@ export async function getPlayersByTeam(teamId: string): Promise<Player[]> {
     // Convertir l'ID TheSportsDB en ID NBA
     const nbaTeamId = TEAM_ID_MAPPING[teamId] || teamId;
 
-    console.log(`🔍 Mapping: TheSportsDB ID ${teamId} -> NBA ID ${nbaTeamId}`);
+    console.log(`🔍 [getPlayersByTeam] Mapping: TheSportsDB ID ${teamId} -> NBA ID ${nbaTeamId}`);
 
     // Utiliser l'API NBA Official - endpoint commonteamroster
     const url = `${NBA_API_CONFIG.baseUrl}/commonteamroster?Season=${NBA_API_CONFIG.season}&TeamID=${nbaTeamId}`;
 
-    await delay(100); // Petit délai pour éviter rate limiting
+    const maxRetries = 3;
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`🔄 [getPlayersByTeam] Tentative ${attempt}/${maxRetries} pour l'équipe ${nbaTeamId}`);
+        
+        await delay(100 * attempt); // Délai progressif
 
-    // Créer un AbortController pour le timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), NBA_API_CONFIG.timeout);
+        // Créer un AbortController pour le timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), NBA_API_CONFIG.timeout);
 
-    try {
-      const response = await fetch(url, {
-        headers: NBA_API_CONFIG.headers as HeadersInit,
-        signal: controller.signal,
-        next: { revalidate: 43200 }, // Cache 12 heures
-      });
+        const response = await fetch(url, {
+          headers: {
+            ...NBA_API_CONFIG.headers,
+            // Headers additionnels pour éviter le blocage
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+          } as HeadersInit,
+          signal: controller.signal,
+          next: { revalidate: 43200 }, // Cache 12 heures
+        });
 
-      clearTimeout(timeoutId);
+        clearTimeout(timeoutId);
 
-      if (!response.ok) {
-        console.error(`NBA API Error: ${response.status} for team ${nbaTeamId}`);
+        if (!response.ok) {
+          console.error(`❌ [getPlayersByTeam] NBA API Error: ${response.status} ${response.statusText} for team ${nbaTeamId}`);
+          
+          // Retry sur erreurs 5xx ou 429
+          if ((response.status >= 500 || response.status === 429) && attempt < maxRetries) {
+            await delay(1000 * attempt);
+            continue;
+          }
+          return [];
+        }
+
+        const data = await response.json();
+
+        // L'API NBA retourne les données dans resultSets[0].rowSet
+        if (!data.resultSets || !data.resultSets[0] || !data.resultSets[0].rowSet) {
+          console.warn(`⚠️  [getPlayersByTeam] Aucun joueur trouvé pour l'équipe ${nbaTeamId}`);
+          return [];
+        }
+
+        // Mapper les données de l'API NBA vers notre format Player
+        const players: Player[] = data.resultSets[0].rowSet.map((row: any[]) => ({
+          id: row[14]?.toString() || '', // PLAYER_ID à l'index 14
+          name: row[3] || 'Unknown', // PLAYER à l'index 3
+          teamId: teamId, // Garder l'ID TheSportsDB pour la compatibilité
+          teamName: '', // Sera rempli par le composant si besoin
+          position: row[7] || 'N/A', // POSITION à l'index 7
+          height: row[8] || '', // HEIGHT à l'index 8
+          weight: row[9] ? `${row[9]} lbs` : '', // WEIGHT à l'index 9
+          nationality: 'USA', // Par défaut (non fourni par cet endpoint)
+          dateOfBirth: row[10] || '', // BIRTH_DATE à l'index 10
+          college: row[13] || '', // SCHOOL à l'index 13
+          imageUrl: `https://cdn.nba.com/headshots/nba/latest/1040x760/${row[14]}.png`,
+          cutout: `https://cdn.nba.com/headshots/nba/latest/1040x760/${row[14]}.png`,
+          description: '',
+        }));
+
+        console.log(
+          `✅ [getPlayersByTeam] Récupéré ${players.length} joueurs pour l'équipe ${teamId} (NBA ID: ${nbaTeamId})`
+        );
+        return players;
+      } catch (fetchError: any) {
+        if (fetchError.name === 'AbortError') {
+          console.warn(`⏱️  [getPlayersByTeam] Timeout (tentative ${attempt}/${maxRetries}) pour l'équipe ${nbaTeamId}`);
+        } else {
+          console.error(`❌ [getPlayersByTeam] Erreur (tentative ${attempt}/${maxRetries}):`, {
+            team: nbaTeamId,
+            error: fetchError.message,
+            name: fetchError.name,
+          });
+        }
+
+        // Retry sauf si c'est la dernière tentative
+        if (attempt < maxRetries) {
+          await delay(2000 * attempt); // Backoff exponentiel
+          continue;
+        }
         return [];
       }
-
-      const data = await response.json();
-
-      // L'API NBA retourne les données dans resultSets[0].rowSet
-      if (!data.resultSets || !data.resultSets[0] || !data.resultSets[0].rowSet) {
-        console.warn(`Aucun joueur trouvé pour l'équipe ${nbaTeamId}`);
-        return [];
-      }
-
-      // Mapper les données de l'API NBA vers notre format Player
-      const players: Player[] = data.resultSets[0].rowSet.map((row: any[]) => ({
-        id: row[14]?.toString() || '', // PLAYER_ID à l'index 14
-        name: row[3] || 'Unknown', // PLAYER à l'index 3
-        teamId: teamId, // Garder l'ID TheSportsDB pour la compatibilité
-        teamName: '', // Sera rempli par le composant si besoin
-        position: row[7] || 'N/A', // POSITION à l'index 7
-        height: row[8] || '', // HEIGHT à l'index 8
-        weight: row[9] ? `${row[9]} lbs` : '', // WEIGHT à l'index 9
-        nationality: 'USA', // Par défaut (non fourni par cet endpoint)
-        dateOfBirth: row[10] || '', // BIRTH_DATE à l'index 10
-        college: row[13] || '', // SCHOOL à l'index 13
-        imageUrl: `https://cdn.nba.com/headshots/nba/latest/1040x760/${row[14]}.png`,
-        cutout: `https://cdn.nba.com/headshots/nba/latest/1040x760/${row[14]}.png`,
-        description: '',
-      }));
-
-      console.log(
-        `✅ Récupéré ${players.length} joueurs pour l'équipe ${teamId} (NBA ID: ${nbaTeamId})`
-      );
-      return players;
-    } catch (fetchError: any) {
-      clearTimeout(timeoutId);
-
-      if (fetchError.name === 'AbortError') {
-        console.warn(`⏱️  Timeout lors de la récupération des joueurs pour l'équipe ${nbaTeamId}`);
-      } else {
-        console.error(`Erreur fetch pour l'équipe ${nbaTeamId}:`, fetchError.message);
-      }
-      return [];
     }
-  } catch (error) {
-    console.error(`Error fetching players for team ${teamId}:`, error);
+
+    return [];
+  } catch (error: any) {
+    console.error(`❌ [getPlayersByTeam] Error général pour l'équipe ${teamId}:`, error);
     return [];
   }
 }
