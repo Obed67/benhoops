@@ -28,6 +28,11 @@ export const NBA_API_CONFIG = {
   timeout: 8000, // 8 secondes max
 } as const;
 
+// API Alternative : BallDontLie (gratuite, pas de clé nécessaire)
+export const ESPN_API_CONFIG = {
+  baseUrl: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba',
+} as const;
+
 // Mapping entre IDs TheSportsDB et IDs NBA Official API
 // TheSportsDB ID -> NBA Team ID
 export const TEAM_ID_MAPPING: Record<string, string> = {
@@ -62,6 +67,40 @@ export const TEAM_ID_MAPPING: Record<string, string> = {
   '134888': '1610612762', // Utah Jazz
   '134889': '1610612764', // Washington Wizards
 } as const;
+
+// Mapping des IDs TheSportsDB -> ESPN Team Slugs
+export const ESPN_TEAM_MAPPING: Record<string, string> = {
+  '134860': 'atl', // Atlanta Hawks
+  '134861': 'bos', // Boston Celtics
+  '134862': 'bkn', // Brooklyn Nets
+  '134863': 'cha', // Charlotte Hornets
+  '134864': 'chi', // Chicago Bulls
+  '134865': 'cle', // Cleveland Cavaliers
+  '134866': 'dal', // Dallas Mavericks
+  '134867': 'den', // Denver Nuggets
+  '134868': 'det', // Detroit Pistons
+  '134869': 'gs', // Golden State Warriors
+  '134870': 'hou', // Houston Rockets
+  '134871': 'ind', // Indiana Pacers
+  '134872': 'lac', // LA Clippers
+  '134873': 'lal', // LA Lakers
+  '134874': 'mem', // Memphis Grizzlies
+  '134875': 'mia', // Miami Heat
+  '134876': 'mil', // Milwaukee Bucks
+  '134877': 'min', // Minnesota Timberwolves
+  '134878': 'no', // New Orleans Pelicans
+  '134879': 'ny', // New York Knicks
+  '134880': 'okc', // Oklahoma City Thunder
+  '134881': 'orl', // Orlando Magic
+  '134882': 'phi', // Philadelphia 76ers
+  '134883': 'phx', // Phoenix Suns
+  '134884': 'por', // Portland Trail Blazers
+  '134885': 'sac', // Sacramento Kings
+  '134886': 'sa', // San Antonio Spurs
+  '134887': 'tor', // Toronto Raptors
+  '134888': 'utah', // Utah Jazz
+  '134889': 'wsh', // Washington Wizards
+};
 
 // Durée de revalidation pour ISR (en secondes)
 export const REVALIDATE_TIME = {
